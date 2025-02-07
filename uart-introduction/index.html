@@ -1,0 +1,1168 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpg">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="小姚">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。            1、UART简介 UART 是一种采用异步串行通信方式的通用异步收发传输器(universal asynchronous receive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三大低速总线之UART详解">
+<meta property="og:url" content="https://yao-jiangyu.github.io/uart-introduction/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。            1、UART简介 UART 是一种采用异步串行通信方式的通用异步收发传输器(universal asynchronous receive">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image-1.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image-2.png">
+<meta property="article:published_time" content="2025-02-07T09:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-07T14:41:58.548Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FPGA">
+<meta property="article:tag" content="通信协议">
+<meta property="article:tag" content="UART">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image.png">
+  
+  
+  
+  <title>三大低速总线之UART详解 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yao-jiangyu.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"jMO2SnEaE8xWJhRaZT0vd3UP-MdYXbMMI","app_key":"SNQjh7z4sNwgP0MEGn5mGmx6","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaojiangyu&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/myfirst.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="三大低速总线之UART详解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-07 17:00" pubdate>
+          2025年2月7日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">三大低速总线之UART详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div class="note note-primary">
+            <p>本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。</p>
+          </div>
+<h1 id="uart简介">1、UART简介</h1>
+<p>UART
+是一种采用<strong>异步串行通信方式</strong>的通用异步收发传输器(universal
+asynchronous receiver-transmitter)，
+它在发送数据时将并行数据转换成串行数据来传输，在接收数据时将接收到的串行数据转换成并行数据。</p>
+<p>UART
+串口通信需要两根信号线来实现，一根用于串口发送，另外一根负责串口接收，如图
+1 所示。对于 PC 来说它的 TX 要和对于 FPGA 来说的 RX 连接，同样 PC 的 RX
+要和 FPGA 的 TX 连接，如果是两个 TX 或者两个 RX
+连接那数据就不能正常被发送出去或者接收到。</p>
+<figure>
+<img src="/img/uart-introduction/image.png" srcset="/img/loading.gif" lazyload alt="图 1 串口通信连接图" />
+<figcaption aria-hidden="true">图 1 串口通信连接图</figcaption>
+</figure>
+<p>UART 在发送或接收过程中的一帧数据由 4
+部分组成，起始位、数据位、奇偶校验位和停止位，如图 2 所示。</p>
+<figure>
+<img src="/img/uart-introduction/image-1.png" srcset="/img/loading.gif" lazyload
+alt="图 2 异步串行通信数据格式" />
+<figcaption aria-hidden="true">图 2 异步串行通信数据格式</figcaption>
+</figure>
+<p><span
+class="label label-success"><strong>起始位：</strong></span>当不传输数据时，UART
+数据传输线通常保持高电压电平。若要开始数据传输，发送
+UART会将传输线从高电平拉到低电平并保持 1 个波特率周期。当接收 UART
+检测到高到低电压跃迁时，便开始以波特率对应的频率读取数据帧中的位。</p>
+<p><span
+class="label label-success"><strong>数据帧：</strong></span>其包含所传输的实际数据。如果使用奇偶校验位，数据帧长度可以是
+5 位到 8 位。如果不使用奇偶校验位，数据帧长度可以是 9
+位。在大多数情况下，数据以最低有效位优先方式发送。</p>
+<p><span
+class="label label-success"><strong>奇偶校验：</strong></span>奇偶性描述数字是偶数还是奇数。通过奇偶校验位，接收
+UART
+判断传输期间是否有数据发生改变。电磁辐射、不一致的波特率或长距离数据传输都可能改变数据位。接收
+UART 读取数据帧后，将计数值为 1
+的位，检查总数是偶数还是奇数。如果奇偶校验位为
+0（偶数奇偶校验），则数据帧中的 1
+或逻辑高位总计应为偶数。如果奇偶校验位为 1（奇数奇偶校验），则数据帧中的
+1 或逻辑高位总计应为奇数。当奇偶校验位与数据匹配时，UART
+认为传输未出错。但是，如果奇偶校验位为 0，而总和为奇数，或者奇偶校验位为
+1，而总和为偶数，则 UART 认为数据帧中的位已改变。</p>
+<p><span
+class="label label-success"><strong>停止位：</strong></span>为了表示数据包结束，发送
+UART 将数据传输线从低电压驱动到高电压并保持 1 到 2 位时间。</p>
+<p>UART
+通信过程中的数据格式及传输速率是可设置的，为了正确的通信，收发双方应约定并遵循同样的设置。数据位可选择为
+5、6、7、8 位，其中 8 位数据位是最常用的，在实际应用中一般都选择 8
+位数据 位；校验位可选择奇校验、偶校验或者无校验位；停止位可选择 1
+位（默认），1.5 或 2
+位。串口通信的速率用波特率表示，它表示每秒传输二进制数据的位数，单位是
+bps（位/秒），常用的波特率有 9600、 19200、38400、57600 以及 115200
+等。</p>
+<div class="note note-primary">
+            <p>波特率：每秒通过信号传输的码元数称为码元的传输速率，常用符号“Baud”表示，其单位为“波特每秒”(Bps)。在信息传输通道中，携带数据信息的信号单元叫作码元(因为串口是1bit 进行传输的，所以其码元就代表一个二进制数)，串口常见的波特率有4800、9600、19200、115200等，其实意思就是每秒传输这么多个比特位数(bit)。</p><p>通信信道每秒传输的信息量称为位传输速率，简称“比特率”，其单位为“每秒比特数”（bps）。比特率可由波特率计算得出，公式为比特率=波特率×单个调制状态对应的二进制位数。</p><p>如果使用的是 115200 的波特率，其串口的比特率为 115200Bps×1bit =115200bps，由计算得串口发送或者接收 1bit 数据的时间为一个波特，即1/115200s。</p>
+          </div>
+<p>目前在各种设备中，都是利用CH340、CP2102等 USB
+转串口芯片来实现串口通信，这些芯片内部集成了 USB
+转串口的功能，只需要通过 USB 接口连接到 PC 上，就可以实现串口通信。</p>
+<figure>
+<img src="/img/uart-introduction/image-2.png" srcset="/img/loading.gif" lazyload
+alt="图 3 USB 串口通信连接示意图" />
+<figcaption aria-hidden="true">图 3 USB 串口通信连接示意图</figcaption>
+</figure>
+<h1
+id="uart接收模块uart_rx.v设计">2、UART接收模块(<code>uart_rx.v</code>)设计</h1>
+<p>该模块实现了一个基于AXI4-Stream接口的UART接收器，支持可配置的数据位宽(<code>DATA_WIDTH</code>)和波特率(通过<code>prescale</code>参数)。主要功能包括：</p>
+<ul>
+<li><p><strong>串行数据接收</strong>：通过<code>rxd</code>引脚接收数据。</p></li>
+<li><p><strong>AXI4-Stream接口输出</strong>：通过<code>m_axis_tdata</code>和<code>m_axis_tvalid</code>输出数据。</p></li>
+<li><p><strong>错误检测</strong>：支持帧错误（<code>frame_error</code>）和溢出错误（<code>overrun_error</code>）。</p></li>
+<li><p><strong>状态指示</strong>：通过<code>busy</code>信号指示接收状态。</p></li>
+</ul>
+<h2 id="关键信号与寄存器">2.1、关键信号与寄存器</h2>
+<h3 id="输入输出接口">2.1.1、输入/输出接口</h3>
+<table>
+<thead>
+<tr>
+<th>信号/参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clk</code>, <code>rst</code></td>
+<td>时钟和复位信号</td>
+</tr>
+<tr>
+<td><code>m_axis_tdata</code></td>
+<td>AXI输出数据（宽度由<code>DATA_WIDTH</code>定义）</td>
+</tr>
+<tr>
+<td><code>m_axis_tvalid</code></td>
+<td>数据有效标志</td>
+</tr>
+<tr>
+<td><code>m_axis_tready</code></td>
+<td>下游模块就绪信号</td>
+</tr>
+<tr>
+<td><code>rxd</code></td>
+<td>UART串行输入</td>
+</tr>
+<tr>
+<td><code>prescale</code></td>
+<td>波特率分频系数（16位）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="内部寄存器">2.2.2、内部寄存器</h3>
+<table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>功能说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rxd_reg</code></td>
+<td>同步后的<code>rxd</code>输入，避免亚稳态</td>
+</tr>
+<tr>
+<td><code>prescale_reg</code></td>
+<td>分频计数器，控制采样时机</td>
+</tr>
+<tr>
+<td><code>bit_cnt</code></td>
+<td>比特计数器，跟踪当前接收的比特位</td>
+</tr>
+<tr>
+<td><code>data_reg</code></td>
+<td>临时存储接收到的数据位</td>
+</tr>
+<tr>
+<td><code>busy_reg</code></td>
+<td>接收状态标志（忙/空闲）</td>
+</tr>
+<tr>
+<td><code>overrun_error_reg</code></td>
+<td>溢出错误标志</td>
+</tr>
+<tr>
+<td><code>frame_error_reg</code></td>
+<td>帧错误标志</td>
+</tr>
+</tbody>
+</table>
+<h2 id="实现流程详解">2.2、实现流程详解</h2>
+<h3 id="复位初始化">2.2.1、复位初始化</h3>
+<ul>
+<li><strong>寄存器清零</strong>：在复位信号(<code>rst</code>)为高电平时，所有寄存器和状态标志被清零，rxd_reg初始化为高电平(UART空闲状态)。</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>rst<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        m_axis_tdata_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        m_axis_tvalid_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        rxd_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>          <span class="token comment">// UART空闲状态为高电平</span>
+        prescale_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        bit_cnt <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        busy_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        overrun_error_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        frame_error_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">else</span> <span class="token keyword">begin</span>
+        <span class="token comment">// 正常操作逻辑</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h3 id="同步与状态更新">2.2.2、同步与状态更新</h3>
+<ul>
+<li><p><strong>同步输入</strong>：<code>rxd_reg</code>在每个时钟上升沿采样<code>rxd</code>，避免亚稳态。</p></li>
+<li><p><strong>错误标志清零</strong>：<code>overrun_error_reg</code>和<code>frame_error_reg</code>在每个周期开始时清零，仅在有错误时置位。</p></li>
+</ul>
+<h3 id="接收逻辑">2.2.3、接收逻辑</h3>
+<h4 id="空闲状态bit_cnt-0">空闲状态(bit_cnt = 0)</h4>
+<ul>
+<li>检测<strong>起始位</strong>：当<code>rxd_reg</code>从高电平跳变为低电平时，启动接收流程。</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>rxd_reg<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">;</span>  <span class="token comment">// 起始位采样点</span>
+    bit_cnt <span class="token operator">&lt;=</span> DATA_WIDTH <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">;</span>            <span class="token comment">// 总比特数：起始位 + 数据位 + 停止位</span>
+    data_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>                        <span class="token comment">// 清空数据寄存器</span>
+    busy_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>                        <span class="token comment">// 进入忙状态</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h4 id="接收数据位bit_cnt-data_width-1">接收数据位(bit_cnt &gt;
+DATA_WIDTH + 1)</h4>
+<ul>
+<li><strong>起始位确认</strong>：确保起始位有效。</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">></span> DATA_WIDTH <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>rxd_reg<span class="token punctuation">)</span> <span class="token keyword">begin</span>                   <span class="token comment">// 起始位有效</span>
+        bit_cnt <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 数据位采样点：1倍波特率周期</span>
+    <span class="token keyword">end</span> <span class="token keyword">else</span> <span class="token keyword">begin</span>                        <span class="token comment">// 起始位无效，中止接收</span>
+        bit_cnt <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        prescale_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h4 id="数据位采集bit_cnt-1">数据位采集(bit_cnt &gt; 1)</h4>
+<ul>
+<li><strong>移位接收</strong>：每个数据位在中间点采样，并右移存入<code>data_reg</code>。</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    bit_cnt <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>  <span class="token comment">// 更新分频计数器</span>
+    data_reg <span class="token operator">&lt;=</span> <span class="token operator">&#123;</span>rxd_reg<span class="token punctuation">,</span> data_reg<span class="token punctuation">[</span>DATA_WIDTH<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">&#125;</span><span class="token punctuation">;</span> <span class="token comment">// 右移并插入新比特</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h4 id="停止位确认bit_cnt-1">停止位确认(bit_cnt = 1)</h4>
+<ul>
+<li><strong>停止位检测</strong>：停止位应为高电平，否则触发帧错误。</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    bit_cnt <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>rxd_reg<span class="token punctuation">)</span> <span class="token keyword">begin</span>                    <span class="token comment">// 停止位有效</span>
+        m_axis_tdata_reg <span class="token operator">&lt;=</span> data_reg<span class="token punctuation">;</span>     <span class="token comment">// 输出数据</span>
+        m_axis_tvalid_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>           <span class="token comment">// 置位有效信号</span>
+        overrun_error_reg <span class="token operator">&lt;=</span> m_axis_tvalid_reg<span class="token punctuation">;</span> <span class="token comment">// 若前次数据未读，触发溢出错误</span>
+    <span class="token keyword">end</span> <span class="token keyword">else</span> <span class="token keyword">begin</span>
+        frame_error_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>             <span class="token comment">// 停止位无效，触发帧错误</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h3 id="错误处理">2.2.4、错误处理</h3>
+<ul>
+<li><strong>溢出错误(Overrun
+Error)</strong>：当新数据已接收(<code>m_axis_tvalid_reg == 1</code>)，但前次数据未被读取(<code>m_axis_tready == 0</code>)时触发。</li>
+<li><strong>帧错误(Frame
+Error)</strong>：停止位无效(停止位为低电平)，触发帧错误。</li>
+</ul>
+<h3 id="波特率控制">2.2.5、波特率控制</h3>
+<ul>
+<li><strong>分频计数器</strong>：<code>prescale_reg</code>控制采样时机，递减至0时触发下一次采样。</li>
+</ul>
+<h1
+id="uart发送模块uart_tx.v设计">3、UART发送模块(<code>uart_tx.v</code>)设计</h1>
+<p>该模块实现了一个基于AXI4-Stream接口的UART发送器，将并行数据转换为串行数据输出，支持可配置的数据位宽(<code>DATA_WIDTH</code>)和波特率(通过<code>prescale</code>输入)。主要功能包括：</p>
+<ul>
+<li><p><strong>串行数据发送</strong>：通过<code>txd</code>引脚发送数据。</p></li>
+<li><p><strong>AXI4-Stream输入</strong>：<code>s_axis_tdata</code>(数据)、<code>s_axis_tvalid</code>(数据有效)、<code>s_axis_tready</code>(模块就绪)。</p></li>
+<li><p><strong>波特率控制</strong>：<code>prescale</code>(波特率分频系数)。</p></li>
+<li><p><strong>状态指示</strong>：通过<code>busy</code>信号指示发送状态。</p></li>
+</ul>
+<h2 id="关键寄存器与信号">3.1、关键寄存器与信号</h2>
+<h3 id="输入输出接口-1">3.1.1、输入/输出接口</h3>
+<table>
+<thead>
+<tr>
+<th>信号/参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clk</code>, <code>rst</code></td>
+<td>时钟和复位信号</td>
+</tr>
+<tr>
+<td><code>s_axis_tdata</code></td>
+<td>AXI输入数据（宽度由<code>DATA_WIDTH</code>定义）</td>
+</tr>
+<tr>
+<td><code>s_axis_tvalid</code></td>
+<td>数据有效标志</td>
+</tr>
+<tr>
+<td><code>s_axis_tready</code></td>
+<td>发送模块就绪信号</td>
+</tr>
+<tr>
+<td><code>txd</code></td>
+<td>UART串行输出</td>
+</tr>
+<tr>
+<td><code>prescale</code></td>
+<td>波特率分频系数（16位）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="内部寄存器-1">3.1.2、内部寄存器</h3>
+<table>
+
+<thead>
+<tr>
+<th>寄存器/信号</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s_axis_tready_reg</code></td>
+<td>控制AXI <code>tready</code>信号，表示模块是否可接收新数据。</td>
+</tr>
+<tr>
+<td><code>txd_reg</code></td>
+<td>存储当前发送的串行数据位（最终输出到<code>txd</code>）。</td>
+</tr>
+<tr>
+<td><code>busy_reg</code></td>
+<td>表示模块是否正在发送数据（高电平有效）。</td>
+</tr>
+<tr>
+<td><code>data_reg</code></td>
+<td>存储待发送的数据帧（包含数据位）。</td>
+</tr>
+<tr>
+<td><code>prescale_reg</code></td>
+<td>波特率分频计数器，用于控制每个位的持续时间。</td>
+</tr>
+<tr>
+<td><code>bit_cnt</code></td>
+<td>位计数器，跟踪当前发送的位位置。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="发送流程详解">3.2、发送流程详解</h2>
+<h3 id="初始状态空闲">3.2.1、初始状态（空闲）</h3>
+<ul>
+<li><p><code>txd_reg</code>保持高电平（空闲状态）。</p></li>
+<li><p><code>s_axis_tready_reg</code>为高，允许接收新数据。</p></li>
+<li><p><code>busy_reg</code>为低，表示模块空闲。</p></li>
+</ul>
+<h3
+id="数据接收与启动发送s_axis_tvalid有效且模块空闲s_axis_tready_reg为高">3.2.2、数据接收与启动发送(<code>s_axis_tvalid</code>有效且模块空闲<code>s_axis_tready_reg</code>为高)</h3>
+<ul>
+<li><p><strong>锁存数据</strong>：<code>data_reg &lt;= &#123;1'b1, s_axis_tdata&#125;</code>。</p></li>
+<li><p><strong>设置起始位</strong>：<code>txd_reg &lt;= 0</code>。</p></li>
+<li><p><strong>初始化计数器</strong>：<code>prescale_reg &lt;= (prescale &lt;&lt; 3) - 1</code>，<code>bit_cnt &lt;= DATA_WIDTH + 1</code>。</p></li>
+<li><p><strong>状态切换</strong>：<code>busy_reg</code>置高，<code>s_axis_tready_reg</code>置低。</p></li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">if</span> <span class="token punctuation">(</span>s_axis_tvalid<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    s_axis_tready_reg <span class="token operator">&lt;=</span> <span class="token operator">!</span>s_axis_tready_reg<span class="token punctuation">;</span>
+    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    bit_cnt <span class="token operator">&lt;=</span> DATA_WIDTH<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
+    data_reg <span class="token operator">&lt;=</span> <span class="token operator">&#123;</span><span class="token number">1'b1</span><span class="token punctuation">,</span> s_axis_tdata<span class="token operator">&#125;</span><span class="token punctuation">;</span>
+    txd_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    busy_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h3 id="数据位发送bit_cnt-1">3.2.3、数据位发送(bit_cnt &gt; 1)</h3>
+<ul>
+<li><p><strong>分频计数</strong>：<code>prescale_reg</code>递减至0。</p></li>
+<li><p><strong>移位发送</strong>：<code>&#123;data_reg, txd_reg&#125; &lt;= &#123;1'b0, data_reg&#125;</code>，<code>txd_reg</code>取<code>data_reg</code>的最低位（LSB优先发送）。</p></li>
+<li><p><strong>更新计数器</strong>：<code>bit_cnt</code>减1，重置<code>prescale_reg</code>。</p></li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    bit_cnt <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token operator">&#123;</span>data_reg<span class="token punctuation">,</span> txd_reg<span class="token operator">&#125;</span> <span class="token operator">&lt;=</span> <span class="token operator">&#123;</span><span class="token number">1'b0</span><span class="token punctuation">,</span> data_reg<span class="token operator">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span></code></pre></div></figure>
+<h3 id="停止位发送bit_cnt-1">3.2.4、停止位发送(bit_cnt == 1)</h3>
+<ul>
+<li><p><strong>设置停止位</strong>：<code>txd_reg &lt;= 1</code>。</p></li>
+<li><p><strong>分频计数</strong>：<code>prescale_reg &lt;= prescale &lt;&lt; 3</code>（停止位持续时间）。</p></li>
+<li><p><strong>状态恢复</strong>：<code>bit_cnt</code>减至0，<code>busy_reg</code>置低，<code>s_axis_tready_reg</code>置高。</p></li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+                bit_cnt <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                txd_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">end</span></code></pre></div></figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+            s_axis_tready_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            busy_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token comment">//其余逻辑</span>
+        <span class="token keyword">end</span>
+</code></pre></div></figure>
+<h2 id="状态转换示意图">3.3、状态转换示意图</h2>
+<figure><div class="code-wrapper"><pre class="language-none"><code class="language-none">     +-------------+
+     |   空闲状态   |
+     | (busy=0)    |
+     +-----+-------+
+           | s_axis_tvalid &amp; s_axis_tready
+           v
+     +-------------+   bit_cnt &gt; 1  +-----------------+
+     | 发送起始位   |+--------------&gt;| 发送数据位(循环) |
+     | (txd=0)     |                | (LSB优先)       |
+     +-----+-------+                +--------+--------+
+           |                                  |
+           | bit_cnt == 1                     |
+           v                                  |
+     +-------------+                          |
+     | 发送停止位   | &lt;------------------------+
+     | (txd=1)     |
+     +-------------+</code></pre></div></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%B8%89%E5%A4%A7%E4%BD%8E%E9%80%9F%E6%80%BB%E7%BA%BF/" class="category-chain-item">三大低速总线</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
+      
+        <a href="/tags/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" class="print-no-link">#通信协议</a>
+      
+        <a href="/tags/UART/" class="print-no-link">#UART</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>三大低速总线之UART详解</div>
+      <div>https://yao-jiangyu.github.io/uart-introduction/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>小姚</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/8b10b/" title="8b/10b编码详解">
+                        <span class="hidden-mobile">8b/10b编码详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://myblogcomment-alpha.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎加入讨论，让我们的评论区热闹起来！使用魔法更加稳定哦！🎈 ~"}},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      京ICP证123456号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
