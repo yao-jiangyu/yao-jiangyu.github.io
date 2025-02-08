@@ -29,8 +29,9 @@
 <meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image.png">
 <meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image-1.png">
 <meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image-2.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/uart-introduction/image-3.png">
 <meta property="article:published_time" content="2025-02-07T09:00:00.000Z">
-<meta property="article:modified_time" content="2025-02-07T14:41:58.548Z">
+<meta property="article:modified_time" content="2025-02-08T04:10:40.411Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="FPGA">
 <meta property="article:tag" content="通信协议">
@@ -254,7 +255,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.7k 字
+          3k 字
         
       </span>
     
@@ -265,7 +266,7 @@
         
         
         
-          23 分钟
+          26 分钟
         
       </span>
     
@@ -396,34 +397,104 @@ id="uart接收模块uart_rx.v设计">2、UART接收模块(<code>uart_rx.v</code>
 <table>
 <thead>
 <tr>
-<th>信号/参数</th>
+<th>类型</th>
+<th>名称</th>
+<th>位宽</th>
+<th>方向</th>
 <th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>clk</code>, <code>rst</code></td>
-<td>时钟和复位信号</td>
+<td>parameter</td>
+<td><code>DATA_WIDTH</code></td>
+<td>-</td>
+<td>-</td>
+<td>数据宽度，默认值为8</td>
 </tr>
 <tr>
-<td><code>m_axis_tdata</code></td>
-<td>AXI输出数据（宽度由<code>DATA_WIDTH</code>定义）</td>
+<td>parameter</td>
+<td><code>CLK_FREQ</code></td>
+<td>-</td>
+<td>-</td>
+<td>输入时钟频率，默认值为200MHz</td>
 </tr>
 <tr>
-<td><code>m_axis_tvalid</code></td>
-<td>数据有效标志</td>
+<td>parameter</td>
+<td><code>BAUD_RATE</code></td>
+<td>-</td>
+<td>-</td>
+<td>目标波特率，默认值为115200bps</td>
 </tr>
 <tr>
-<td><code>m_axis_tready</code></td>
-<td>下游模块就绪信号</td>
-</tr>
-<tr>
-<td><code>rxd</code></td>
-<td>UART串行输入</td>
-</tr>
-<tr>
+<td>localparam</td>
 <td><code>prescale</code></td>
-<td>波特率分频系数（16位）</td>
+<td>-</td>
+<td>-</td>
+<td>分频系数 = CLK_FREQ/(BAUD_RATE*8)</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>clk</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统时钟</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>rst</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统复位，高电平有效</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>m_axis_tdata</code></td>
+<td>DATA_WIDTH</td>
+<td>output</td>
+<td>AXI Stream数据输出</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>m_axis_tvalid</code></td>
+<td>1</td>
+<td>output</td>
+<td>AXI Stream数据有效信号</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>m_axis_tready</code></td>
+<td>1</td>
+<td>input</td>
+<td>AXI Stream就绪信号</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>rxd</code></td>
+<td>1</td>
+<td>input</td>
+<td>UART接收数据线</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>busy</code></td>
+<td>1</td>
+<td>output</td>
+<td>接收器忙状态指示</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>overrun_error</code></td>
+<td>1</td>
+<td>output</td>
+<td>数据溢出错误指示</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>frame_error</code></td>
+<td>1</td>
+<td>output</td>
+<td>帧格式错误指示</td>
 </tr>
 </tbody>
 </table>
@@ -464,6 +535,14 @@ id="uart接收模块uart_rx.v设计">2、UART接收模块(<code>uart_rx.v</code>
 <td><code>frame_error_reg</code></td>
 <td>帧错误标志</td>
 </tr>
+<tr>
+<td><code>m_axis_tdata_reg</code></td>
+<td>输出数据寄存器</td>
+</tr>
+<tr>
+<td><code>m_axis_tvalid_reg</code></td>
+<td>输出数据有效标志</td>
+</tr>
 </tbody>
 </table>
 <h2 id="实现流程详解">2.2、实现流程详解</h2>
@@ -481,7 +560,8 @@ id="uart接收模块uart_rx.v设计">2、UART接收模块(<code>uart_rx.v</code>
         busy_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
         overrun_error_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
         frame_error_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">end</span> <span class="token keyword">else</span> <span class="token keyword">begin</span>
+    <span class="token keyword">end</span> 
+    <span class="token keyword">else</span> <span class="token keyword">begin</span>
         <span class="token comment">// 正常操作逻辑</span>
     <span class="token keyword">end</span>
 <span class="token keyword">end</span></code></pre></div></figure>
@@ -540,10 +620,10 @@ DATA_WIDTH + 1)</h4>
 <span class="token keyword">end</span></code></pre></div></figure>
 <h3 id="错误处理">2.2.4、错误处理</h3>
 <ul>
-<li><strong>溢出错误(Overrun
-Error)</strong>：当新数据已接收(<code>m_axis_tvalid_reg == 1</code>)，但前次数据未被读取(<code>m_axis_tready == 0</code>)时触发。</li>
-<li><strong>帧错误(Frame
-Error)</strong>：停止位无效(停止位为低电平)，触发帧错误。</li>
+<li><p><strong>溢出错误(Overrun
+Error)</strong>：当新数据已接收(<code>m_axis_tvalid_reg == 1</code>)，但前次数据未被读取(<code>m_axis_tready == 0</code>)时触发。</p></li>
+<li><p><strong>帧错误(Frame
+Error)</strong>：停止位无效(停止位为低电平)，触发帧错误。</p></li>
 </ul>
 <h3 id="波特率控制">2.2.5、波特率控制</h3>
 <ul>
@@ -563,34 +643,90 @@ id="uart发送模块uart_tx.v设计">3、UART发送模块(<code>uart_tx.v</code>
 <table>
 <thead>
 <tr>
-<th>信号/参数</th>
+<th>类型</th>
+<th>名称</th>
+<th>位宽</th>
+<th>方向</th>
 <th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>clk</code>, <code>rst</code></td>
-<td>时钟和复位信号</td>
+<td>parameter</td>
+<td><code>DATA_WIDTH</code></td>
+<td>-</td>
+<td>-</td>
+<td>数据宽度，默认值为8</td>
 </tr>
 <tr>
-<td><code>s_axis_tdata</code></td>
-<td>AXI输入数据（宽度由<code>DATA_WIDTH</code>定义）</td>
+<td>parameter</td>
+<td><code>CLK_FREQ</code></td>
+<td>-</td>
+<td>-</td>
+<td>输入时钟频率，默认值为200MHz</td>
 </tr>
 <tr>
-<td><code>s_axis_tvalid</code></td>
-<td>数据有效标志</td>
+<td>parameter</td>
+<td><code>BAUD_RATE</code></td>
+<td>-</td>
+<td>-</td>
+<td>目标波特率，默认值为115200bps</td>
 </tr>
 <tr>
-<td><code>s_axis_tready</code></td>
-<td>发送模块就绪信号</td>
-</tr>
-<tr>
-<td><code>txd</code></td>
-<td>UART串行输出</td>
-</tr>
-<tr>
+<td>localparam</td>
 <td><code>prescale</code></td>
-<td>波特率分频系数（16位）</td>
+<td>-</td>
+<td>-</td>
+<td>分频系数 = CLK_FREQ/(BAUD_RATE*8)</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>clk</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统时钟</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>rst</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统复位，高电平有效</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>s_axis_tdata</code></td>
+<td>DATA_WIDTH</td>
+<td>input</td>
+<td>AXI Stream数据输入</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>s_axis_tvalid</code></td>
+<td>1</td>
+<td>input</td>
+<td>AXI Stream数据有效信号</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>s_axis_tready</code></td>
+<td>1</td>
+<td>output</td>
+<td>AXI Stream就绪信号</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>txd</code></td>
+<td>1</td>
+<td>output</td>
+<td>UART发送数据线</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>busy</code></td>
+<td>1</td>
+<td>output</td>
+<td>发送器忙状态指示</td>
 </tr>
 </tbody>
 </table>
@@ -640,18 +776,18 @@ id="uart发送模块uart_tx.v设计">3、UART发送模块(<code>uart_tx.v</code>
 <h3
 id="数据接收与启动发送s_axis_tvalid有效且模块空闲s_axis_tready_reg为高">3.2.2、数据接收与启动发送(<code>s_axis_tvalid</code>有效且模块空闲<code>s_axis_tready_reg</code>为高)</h3>
 <ul>
-<li><p><strong>锁存数据</strong>：<code>data_reg &lt;= &#123;1'b1, s_axis_tdata&#125;</code>。</p></li>
+<li><p><strong>锁存数据</strong>：<code>data_reg &lt;= s_axis_tdata</code>。</p></li>
 <li><p><strong>设置起始位</strong>：<code>txd_reg &lt;= 0</code>。</p></li>
 <li><p><strong>初始化计数器</strong>：<code>prescale_reg &lt;= (prescale &lt;&lt; 3) - 1</code>，<code>bit_cnt &lt;= DATA_WIDTH + 1</code>。</p></li>
 <li><p><strong>状态切换</strong>：<code>busy_reg</code>置高，<code>s_axis_tready_reg</code>置低。</p></li>
 </ul>
 <figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">if</span> <span class="token punctuation">(</span>s_axis_tvalid<span class="token punctuation">)</span> <span class="token keyword">begin</span>
     s_axis_tready_reg <span class="token operator">&lt;=</span> <span class="token operator">!</span>s_axis_tready_reg<span class="token punctuation">;</span>
-    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    bit_cnt <span class="token operator">&lt;=</span> DATA_WIDTH<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
-    data_reg <span class="token operator">&lt;=</span> <span class="token operator">&#123;</span><span class="token number">1'b1</span><span class="token punctuation">,</span> s_axis_tdata<span class="token operator">&#125;</span><span class="token punctuation">;</span>
-    txd_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    busy_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    prescale_reg      <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    bit_cnt           <span class="token operator">&lt;=</span> DATA_WIDTH <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    data_reg          <span class="token operator">&lt;=</span> s_axis_tdata<span class="token punctuation">;</span>
+    txd_reg           <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    busy_reg          <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
 <span class="token keyword">end</span></code></pre></div></figure>
 <h3 id="数据位发送bit_cnt-1">3.2.3、数据位发送(bit_cnt &gt; 1)</h3>
 <ul>
@@ -660,10 +796,10 @@ id="数据接收与启动发送s_axis_tvalid有效且模块空闲s_axis_tready_r
 <li><p><strong>更新计数器</strong>：<code>bit_cnt</code>减1，重置<code>prescale_reg</code>。</p></li>
 </ul>
 <figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
-    bit_cnt <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    bit_cnt             <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    prescale_reg        <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token operator">&#123;</span>data_reg<span class="token punctuation">,</span> txd_reg<span class="token operator">&#125;</span> <span class="token operator">&lt;=</span> <span class="token operator">&#123;</span><span class="token number">1'b0</span><span class="token punctuation">,</span> data_reg<span class="token operator">&#125;</span><span class="token punctuation">;</span>
-<span class="token keyword">end</span></code></pre></div></figure>
+<span class="token keyword">end</span> </code></pre></div></figure>
 <h3 id="停止位发送bit_cnt-1">3.2.4、停止位发送(bit_cnt == 1)</h3>
 <ul>
 <li><p><strong>设置停止位</strong>：<code>txd_reg &lt;= 1</code>。</p></li>
@@ -671,16 +807,15 @@ id="数据接收与启动发送s_axis_tvalid有效且模块空闲s_axis_tready_r
 <li><p><strong>状态恢复</strong>：<code>bit_cnt</code>减至0，<code>busy_reg</code>置低，<code>s_axis_tready_reg</code>置高。</p></li>
 </ul>
 <figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
-                bit_cnt <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
-                prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                txd_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-            <span class="token keyword">end</span></code></pre></div></figure>
+    prescale_reg <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>prescale <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    bit_cnt      <span class="token operator">&lt;=</span> bit_cnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    txd_reg      <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span></code></pre></div></figure>
 <figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>bit_cnt <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
-            s_axis_tready_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-            busy_reg <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-            <span class="token comment">//其余逻辑</span>
-        <span class="token keyword">end</span>
-</code></pre></div></figure>
+    s_axis_tready_reg <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    busy_reg          <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token comment">//其他逻辑</span>
+<span class="token keyword">end</span></code></pre></div></figure>
 <h2 id="状态转换示意图">3.3、状态转换示意图</h2>
 <figure><div class="code-wrapper"><pre class="language-none"><code class="language-none">     +-------------+
      |   空闲状态   |
@@ -699,6 +834,127 @@ id="数据接收与启动发送s_axis_tvalid有效且模块空闲s_axis_tready_r
      | 发送停止位   | &lt;------------------------+
      | (txd=1)     |
      +-------------+</code></pre></div></figure>
+<h1 id="uart回环测试">4、UART回环测试</h1>
+<p>比较简单，只需要将发送模块和接收模块互相连接，然后通过串口助手发送数据，观察接收端是否能够正常接收到数据即可。</p>
+<h2 id="输入输出接口-2">4.1、输入/输出接口</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>位宽</th>
+<th>方向</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parameter</td>
+<td><code>DATA_WIDTH</code></td>
+<td>-</td>
+<td>-</td>
+<td>数据宽度，默认值为8</td>
+</tr>
+<tr>
+<td>parameter</td>
+<td><code>CLK_FREQ</code></td>
+<td>-</td>
+<td>-</td>
+<td>输入时钟频率，默认值为200MHz</td>
+</tr>
+<tr>
+<td>parameter</td>
+<td><code>BAUD_RATE</code></td>
+<td>-</td>
+<td>-</td>
+<td>目标波特率，默认值为115200bps</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>sys_clk_p</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统差分时钟正端</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>sys_clk_n</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统差分时钟负端</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>sys_rst_n</code></td>
+<td>1</td>
+<td>input</td>
+<td>系统复位信号，低电平有效</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>uart_rxd</code></td>
+<td>1</td>
+<td>input</td>
+<td>UART接收数据线</td>
+</tr>
+<tr>
+<td>wire</td>
+<td><code>uart_txd</code></td>
+<td>1</td>
+<td>output</td>
+<td>UART发送数据线</td>
+</tr>
+</tbody>
+</table>
+<h2 id="模块实例化">4.2、模块实例化</h2>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog">uart_tx #<span class="token punctuation">(</span>
+    <span class="token punctuation">.</span><span class="token function">DATA_WIDTH</span><span class="token punctuation">(</span>DATA_WIDTH<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">CLK_FREQ</span><span class="token punctuation">(</span>CLK_FREQ<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">BAUD_RATE</span><span class="token punctuation">(</span>BAUD_RATE<span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+uart_tx_inst <span class="token punctuation">(</span>
+    <span class="token punctuation">.</span><span class="token function">clk</span><span class="token punctuation">(</span>sys_clk<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">rst</span><span class="token punctuation">(</span><span class="token operator">~</span>sys_rst_n<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// axi input</span>
+    <span class="token punctuation">.</span><span class="token function">s_axis_tdata</span><span class="token punctuation">(</span>m_axis_tdata<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">s_axis_tvalid</span><span class="token punctuation">(</span>m_axis_tvalid<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">s_axis_tready</span><span class="token punctuation">(</span>m_axis_tready<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// output</span>
+    <span class="token punctuation">.</span><span class="token function">txd</span><span class="token punctuation">(</span>uart_txd<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// status output</span>
+    <span class="token punctuation">.</span><span class="token function">busy</span><span class="token punctuation">(</span>tx_busy<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+uart_rx #<span class="token punctuation">(</span>
+    <span class="token punctuation">.</span><span class="token function">DATA_WIDTH</span><span class="token punctuation">(</span>DATA_WIDTH<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">CLK_FREQ</span><span class="token punctuation">(</span>CLK_FREQ<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">BAUD_RATE</span><span class="token punctuation">(</span>BAUD_RATE<span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+uart_rx_inst <span class="token punctuation">(</span>
+    <span class="token punctuation">.</span><span class="token function">clk</span><span class="token punctuation">(</span>sys_clk<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">rst</span><span class="token punctuation">(</span><span class="token operator">~</span>sys_rst_n<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// axi output</span>
+    <span class="token punctuation">.</span><span class="token function">m_axis_tdata</span><span class="token punctuation">(</span>m_axis_tdata<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">m_axis_tvalid</span><span class="token punctuation">(</span>m_axis_tvalid<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">m_axis_tready</span><span class="token punctuation">(</span>m_axis_tready<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// input</span>
+    <span class="token punctuation">.</span><span class="token function">rxd</span><span class="token punctuation">(</span>uart_rxd<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token comment">// status output</span>
+    <span class="token punctuation">.</span><span class="token function">busy</span><span class="token punctuation">(</span>rx_busy<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">overrun_error</span><span class="token punctuation">(</span>rx_overrun_error<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span><span class="token function">frame_error</span><span class="token punctuation">(</span>rx_frame_error<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></div></figure>
+<h2 id="测试结果">4.3、测试结果</h2>
+<ul>
+<li><p><strong>波特率</strong>：115200bps</p></li>
+<li><p><strong>数据位</strong>：8位</p></li>
+<li><p><strong>校验位</strong>：无</p></li>
+<li><p><strong>停止位</strong>：1位</p></li>
+</ul>
+<figure>
+<img src="/img/uart-introduction/image-3.png" srcset="/img/loading.gif" lazyload alt="alt text" />
+<figcaption aria-hidden="true">alt text</figcaption>
+</figure>
 
                 
               </div>
