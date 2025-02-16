@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>HDLBits刷题日记一</title>
+    <link href="/HDLBits_one/"/>
+    <url>/HDLBits_one/</url>
+    
+    <content type="html"><![CDATA[<div class="note note-primary">            <p>打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。</p>          </div><h1 id="getting-started">1、Getting Started</h1><h2 id="problem-0-step-one">Problem 0 : Step one</h2><p>Build a circuit with no inputs and one output. That output shouldalways drive 1 (or logic high).</p><p>构建一个电路，没有输入端口，只有一个输出端口，输出端口时钟驱动逻辑 1，即逻辑高电平。</p><figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>    <span class="token keyword">output</span> one<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token keyword">assign</span> one <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span><span class="token keyword">endmodule</span></code></pre></div></figure><div class="note note-success">            <p>1 在数字逻辑中代表 logic high，而 0 代表 logic low。</p>          </div><h2 id="problem-1-zero">Problem 1 : Zero</h2><p>Build a circuit with no inputs and one output that outputs a constant0.</p><p>构建一个电路，没有输入端口，只有一个输出端口，但这次输出端口时钟驱动逻辑0 ，即逻辑低电平。</p><figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>    <span class="token keyword">output</span> zero<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// Module body starts after semicolon</span>    <span class="token keyword">assign</span> zero <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span><span class="token keyword">endmodule</span></code></pre></div></figure><h1 id="verilog-language---basics">2、Verilog Language - Basics</h1><h2 id="problem-2-wire">Problem 2 : Wire</h2><p>Create a module with one input and one output that behaves like awire.</p><p>创建一个具有一个输入和一个输出的模块，其行为类似于导线（wire）。</p><p>不同于物理导线，Verilog中的导线（和其他信号）是有<strong>方向性</strong>的。这意味着信息只能从源（source）单向流向接收端（sink）（源通常也被称为驱动器，用于向导线驱动一个值）。在Verilog的"连续赋值"语句中（<code>assign left_side = right_side;</code>），右侧信号的值被驱动到左侧的导线上。这种赋值被称为"连续的"，是因为即使右侧的值发生变化，赋值也会持续进行。连续赋值不是一次性的事件。</p><p>模块的端口也具有方向性（通常是输入或输出）。输入端口由模块外部的元件驱动，而输出端口则驱动模块外部的元件。从模块内部来看，输入端口是一个驱动器或源，而输出端口是一个接收端。</p><p>下图说明了电路的每个部分如何对应Verilog代码的每个位。模块和端口声明创建了电路的黑色部分。我们的任务是通过添加一个<code>assign</code>语句来创建一条导线（绿色部分），将输入(<code>in</code>)连接到输出(<code>out</code>)。模块外部的部分不是我们需要关心的，但应该知道，我们设计的电路将通过官方的测试工具连接到<code>top_module</code>的端口来进行测试。</p><figure><img src="/img/HDLBits_one/image.png" alt="Wire" /><figcaption aria-hidden="true">Wire</figcaption></figure><figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>    <span class="token keyword">input</span> in<span class="token punctuation">,</span>    <span class="token keyword">output</span> out<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token keyword">assign</span> out <span class="token operator">=</span> in<span class="token punctuation">;</span>    <span class="token comment">// Note that wires are directional, so "assign in = out" is not equivalent.</span>    <span class="token comment">// 注意 wire 是有方向的 因此 assign in = out 是不等价的</span><span class="token keyword">endmodule</span></code></pre></div></figure><div class="note note-success">            <p>wire 一般只有一个 source，即从某一点输出，但可以有多个sinks，即输入到多个点</p>          </div><h2 id="problem-3-wire4">Problem 3 : Wire4</h2><p>Create a module with 3 inputs and 4 outputs that behaves like wiresthat makes these connections:</p><p>创建一个具有3个输入和4个输出的模块，要实现如下连接：</p><p>a -&gt; w</p><p>b -&gt; x</p><p>b -&gt; y</p><p>c -&gt; z</p><figure><img src="/img/HDLBits_one/image-1.png" alt="Wire4" /><figcaption aria-hidden="true">Wire4</figcaption></figure><figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span>    <span class="token keyword">input</span> a<span class="token punctuation">,</span>    <span class="token keyword">input</span> b<span class="token punctuation">,</span>    <span class="token keyword">input</span> c<span class="token punctuation">,</span>    <span class="token keyword">output</span> w<span class="token punctuation">,</span>    <span class="token keyword">output</span> x<span class="token punctuation">,</span>    <span class="token keyword">output</span> y<span class="token punctuation">,</span>    <span class="token keyword">output</span> z<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// 这里的顺序可以任意调换</span>    <span class="token keyword">assign</span> w <span class="token operator">=</span> a<span class="token punctuation">;</span>    <span class="token keyword">assign</span> x <span class="token operator">=</span> b<span class="token punctuation">;</span>    <span class="token keyword">assign</span> y <span class="token operator">=</span> b<span class="token punctuation">;</span>    <span class="token comment">// 注意这里 b 连接到两个输出</span>    <span class="token keyword">assign</span> z <span class="token operator">=</span> c<span class="token punctuation">;</span>    <span class="token keyword">endmodule</span></code></pre></div></figure><div class="note note-success">            <ul><li><p>多个 assign语句的顺序并不重要，因为它们描述的是连接关系，而不是执行顺序。</p></li><li><p>输入输出端口声明会自动声明 wire类型（除非特别指定其他类型），模块端口声明 <code>input a</code> 等同于<code>input wire a</code> 。</p></li><li><p>assign语句不是创建新的导线，而是在已存在的导线之间建立连接</p></li></ul>          </div><p>注意 b 连接到了两个输出（x 和y），这是允许的，因为一个输入信号可以驱动多个输出；虽然看起来有4条assign 语句，但我们实际上是在7个已经存在的导线之间建立连接</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>HDLBits刷题</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>HDLBits</tag>
+      
+      <tag>刷题</tag>
+      
+      <tag>FPGA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>三大低速总线之UART详解</title>
     <link href="/uart-introduction/"/>
     <url>/uart-introduction/</url>
@@ -49,26 +78,13 @@
     
     <tags>
       
-      <tag>数字编码</tag>
-      
       <tag>FPGA</tag>
+      
+      <tag>数字编码</tag>
       
       <tag>8b/10b</tag>
       
     </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="/hello-world/"/>
-    <url>/hello-world/</url>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your veryfirst post. Check <a href="https://hexo.io/docs/">documentation</a> formore info. If you get any problems when using Hexo, you can find theanswer in <ahref="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> oryou can ask me on <ahref="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="quick-start">Quick Start</h2><h3 id="create-a-new-post">Create a new post</h3><figure><div class="code-wrapper"><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre></div></figure><p>More info: <ahref="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="run-server">Run server</h3><figure><div class="code-wrapper"><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo server</code></pre></div></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="generate-static-files">Generate static files</h3><figure><div class="code-wrapper"><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo generate</code></pre></div></figure><p>More info: <ahref="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="deploy-to-remote-sites">Deploy to remote sites</h3><figure><div class="code-wrapper"><pre class="language-bash" data-language="bash"><code class="language-bash">$ hexo deploy</code></pre></div></figure><p>More info: <ahref="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-    
-    
     
   </entry>
   
