@@ -1,0 +1,957 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpg">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="小姚">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Verilog Language - Vectors Problem 10 : Vectors 向量是一组 wire 信号的集合，通过赋予这一组信号的集合一个名称，以便于访问其中的 wire 信号">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDLBits刷题日记（三）">
+<meta property="og:url" content="https://yao-jiangyu.github.io/HDLBits_three/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Verilog Language - Vectors Problem 10 : Vectors 向量是一组 wire 信号的集合，通过赋予这一组信号的集合一个名称，以便于访问其中的 wire 信号">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_three/Vector0.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_three/Vectorgates.png">
+<meta property="article:published_time" content="2025-02-21T08:17:00.000Z">
+<meta property="article:modified_time" content="2025-02-21T09:49:56.133Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FPGA">
+<meta property="article:tag" content="HDLBits">
+<meta property="article:tag" content="刷题">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/HDLBits_three/Vector0.png">
+  
+  
+  
+  <title>HDLBits刷题日记（三） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yao-jiangyu.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"jMO2SnEaE8xWJhRaZT0vd3UP-MdYXbMMI","app_key":"SNQjh7z4sNwgP0MEGn5mGmx6","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaojiangyu&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/myfirst.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HDLBits刷题日记（三）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-21 16:17" pubdate>
+          2025年2月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HDLBits刷题日记（三）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div class="note note-primary">
+            <p>打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。</p>
+          </div>
+<h1 id="verilog-language---vectors">1、Verilog Language - Vectors</h1>
+<h2 id="problem-10-vectors">Problem 10 : Vectors</h2>
+<p>向量是一组 wire
+信号的集合，通过赋予这一组信号的集合一个名称，以便于访问其中的 wire
+信号</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> w <span class="token punctuation">;</span> <span class="token comment">// 声明了一个 8 bit 位宽的信号，向量名为 w，等价于 8 个 1bit 位宽的 wire 信号。</span></code></pre></div></figure>
+<p>请注意声明向量时，位宽位于向量名之前。但在片选向量中某个 bit
+时，使用的语法同 C 语言数组中取出某个数的语法相同。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">99</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> my_vector<span class="token punctuation">;</span>      <span class="token comment">// Declare a 100-element vector </span>
+<span class="token keyword">assign</span> out <span class="token operator">=</span> my_vector<span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// Part-select one bit out of the vector </span></code></pre></div></figure>
+<p>在同时声明多个向量时，位宽对于声明的多个向量都是起作用的，比如：</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">;</span> <span class="token comment">// Declares three 8-bit vectors</span></code></pre></div></figure>
+<p>Build a circuit that has one 3-bit input, then outputs the same
+vector, and also splits it into three separate 1-bit outputs.</p>
+<p>构建一个电路，有一个 3
+位输入，然后输出相同的向量，并将其分成三个单独的 1 位输出。</p>
+<figure>
+<img src="/img/HDLBits_three/Vector0.png" srcset="/img/loading.gif" lazyload alt="Vector0" />
+<figcaption aria-hidden="true">Vector0</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> vec<span class="token punctuation">,</span> 
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> outv<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> o2<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> o1<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> o0
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> outv <span class="token operator">=</span> vec<span class="token punctuation">;</span>
+
+    <span class="token comment">// This is ok too: assign &#123;o2, o1, o0&#125; = vec;</span>
+    <span class="token keyword">assign</span> o0 <span class="token operator">=</span> vec<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> o1 <span class="token operator">=</span> vec<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> o2 <span class="token operator">=</span> vec<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<p>如果想要片选多个 bit，那么可以通过如下操作实现:</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">assign</span> w <span class="token operator">=</span> vec<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> </code></pre></div></figure>
+<h2 id="problem-11-vectors-in-more-detail">Problem 11 : Vectors in more
+detail</h2>
+<p>向量的声明规则如下：</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">type</span> <span class="token punctuation">[</span>upper<span class="token punctuation">:</span>lower<span class="token punctuation">]</span> vector_name<span class="token punctuation">;</span></code></pre></div></figure>
+<p>其中 type 指定了向量的类型，一般为 wire 或者 reg 型。关于 reg
+型，会在后续介绍中引入。如果向量为模块的输入输出端口，那么可以在 type
+中添加 input/output 定义。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> w<span class="token punctuation">;</span>         <span class="token comment">// 8-bit wire</span>
+<span class="token keyword">reg</span>  <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span> x<span class="token punctuation">;</span>         <span class="token comment">// 4-bit reg</span>
+<span class="token keyword">output</span> <span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> y<span class="token punctuation">;</span>   <span class="token comment">// 1-bit reg  output port (但仍然是一个向量)</span>
+<span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span> z<span class="token punctuation">;</span>  <span class="token comment">// 6-bit wire input (在位宽中使用负数作为 index 是可以的，代表倒数第二位)</span>
+<span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">;</span>       <span class="token comment">// 4-bit output wire. wire 为默认定义，在没有显式声明的情况下</span>
+<span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">7</span><span class="token punctuation">]</span> b<span class="token punctuation">;</span>         <span class="token comment">// 8-bit wire b[0]是这个向量的 最高位 MSB（most-significant bit）</span></code></pre></div></figure>
+<p>声明为 [3:0] w 的向量，LSB 是 w[0]，如果声明为 [0:3] w,那么 w[3] 是
+LSB 。LSB 指的是二进制数中权值最低的一位。</p>
+<p>在 Verilog 语法中，可以将向量声明为 [3:0],
+这种语法最为常见，但也可以将向量声明为
+[0:3]。这都是可以的，但必须在声明和使用时保持一致。如果声明为 wire [3:0]
+w ，但使用 w[0:3]
+赋值，这是不允许的，保持前后如一的比特顺序是很重要的一点。</p>
+<p>信号变量有两种声明方式，一是使用 wire 或者 assign
+语句进行显示声明和定义，二是综合器的隐式声明和定义。变量隐式声明的危害在于，当你将一个未定义声明的信号连接到模块的输入输出端口时，综合器会“热心”地帮助你声明这个信号，但它只会将其声明为
+1 bit wire 型信号。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> c<span class="token punctuation">;</span>   <span class="token comment">// Two vectors</span>
+<span class="token keyword">assign</span> a <span class="token operator">=</span> <span class="token number">3'b101</span><span class="token punctuation">;</span>  <span class="token comment">// a = 101</span>
+<span class="token keyword">assign</span> b <span class="token operator">=</span> a<span class="token punctuation">;</span>       <span class="token comment">// b =   1  implicitly-created wire</span>
+<span class="token keyword">assign</span> c <span class="token operator">=</span> b<span class="token punctuation">;</span>       <span class="token comment">// c = 001  &lt;-- bug</span>
+my_module i1 <span class="token punctuation">(</span>d<span class="token punctuation">,</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// d and e are implicitly one-bit wide if not declared.</span>
+                    <span class="token comment">// This could be a bug if the port was intended to be a vector.</span></code></pre></div></figure>
+<p>通过添加 `default_nettype none
+宏定义会关闭隐式声明功能，那么这样一来，使用未声明的变量就会变成一个
+Error 而不再只是 Warning。</p>
+<p>unpacked 和 packed
+数组：在声明向量时，一般向量的位宽写在向量名之前。位宽定义了向量的
+packed
+维度，该向量中每位信号都被视作一个块进行操作（在仿真中，硬件中有所不同）。unpacked
+维度定义在向量名之后，通常用来定义向量数组长度。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> mem <span class="token punctuation">[</span><span class="token number">255</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>   <span class="token comment">// 256 unpacked elements, each of which is a 8-bit packed vector of reg.</span>
+<span class="token keyword">reg</span> mem2 <span class="token punctuation">[</span><span class="token number">28</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>         <span class="token comment">// 29 unpacked elements, each of which is a 1-bit reg.</span></code></pre></div></figure>
+<p>获取向量元素，也称片选：</p>
+<p>通过向量名可以获得整个向量，在下方的 assign 语句中，向量名 a
+代表了向量中的所有比特为信号。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> w <span class="token operator">=</span> a<span class="token punctuation">;</span> </code></pre></div></figure>
+<p>在 assign
+赋值操作中，如果等号左右两侧信号的位宽不同，那么就会进行截断或者补零操作。左侧信号位宽大于右侧信号位宽，右值的低位赋予左值对应的低位，左值高位的部分赋零。左侧信号位宽小于右侧信号位宽，右值的低位赋予左值对应的低位，右值高位的部分直接被截断。即保留右值的低位。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog">w<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span>      <span class="token comment">// Only the lower 4 bits of w</span>
+x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>        <span class="token comment">// The lowest bit of x</span>
+x<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span>      <span class="token comment">// ...also the lowest bit of x</span>
+z<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>    <span class="token comment">// Z 最低两位</span>
+b<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span>      <span class="token comment">// 如果 b 在声明时 声明为 wire [0:3] b;则不能使用 b [3:0]进行选择</span>
+b<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">]</span>      <span class="token comment">// b的高四位.</span>
+<span class="token keyword">assign</span> w<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> b<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>    <span class="token comment">// 将 b 的高位赋予 w 的低位 w[3]=b[0], w[2]=b[1], etc.</span></code></pre></div></figure>
+<p>Build a combinational circuit that splits an input half-word (16
+bits, [15:0] ) into lower [7:0] and upper [15:8] bytes.</p>
+<p>构建一个组合电路，将输入的半字（16 位，[15:0]）分为低位 [7:0] 和高位
+[15:8] 字节。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token constant">`default_nettype</span> none     <span class="token comment">// Disable implicit nets. Reduces some types of bugs.</span>
+<span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out_hi<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out_lo <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_hi <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_lo <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-12-vector-part-select">Problem 12 : Vector part
+select</h2>
+<p>A 32-bit vector can be viewed as containing 4 bytes (bits [31:24],
+[23:16], etc.). Build a circuit that will reverse the byte ordering of
+the 4-byte word.</p>
+<p>一个 32 位向量可以看作包含 4 个字节（位 [31:24], [23:16],
+etc.）。构建一个电路，将 4 字节的字节顺序反转。</p>
+<p>AaaaaaaaBbbbbbbbCcccccccDddddddd =&gt;
+DdddddddCcccccccBbbbbbbbAaaaaaaa</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">assign</span> out<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">24</span><span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out<span class="token punctuation">[</span><span class="token number">23</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">23</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">24</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//或者使用&#123;&#125;拼接符</span>
+    <span class="token comment">// assign out = &#123;in[7:0], in[15:8], in[23:16], in[31:24]&#125;;</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-13-bitwise-operators">Problem 13 : Bitwise
+operators</h2>
+<p>Build a circuit that has two 3-bit inputs that computes the
+bitwise-OR of the two vectors, the logical-OR of the two vectors, and
+the inverse (NOT) of both vectors. Place the inverse of b in the upper
+half of out_not (i.e., bits [5:3]), and the inverse of a in the lower
+half.</p>
+<p>构建一个电路，有两个 3
+位输入，计算两个向量的按位或，两个向量的逻辑或，以及两个向量的逆（NOT）。将
+b 的逆放在 out_not 的上半部分（即，位 [5:3]），将 a
+的逆放在下半部分。</p>
+<figure>
+<img src="/img/HDLBits_three/Vectorgates.png" srcset="/img/loading.gif" lazyload alt="Vectorgates" />
+<figcaption aria-hidden="true">Vectorgates</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> b<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out_or_bitwise<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out_or_logical<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out_not
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_or_bitwise <span class="token operator">=</span> a <span class="token operator">|</span> b<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_or_logical <span class="token operator">=</span> a <span class="token operator">||</span> b<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_not <span class="token operator">=</span> <span class="token operator">&#123;~</span>b<span class="token punctuation">,</span> <span class="token operator">~</span>a<span class="token operator">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-14-four-input-gates">Problem 14 : Four-input gates</h2>
+<p>Build a combinational circuit with four inputs, in[3:0]. There are 3
+outputs:</p>
+<p>out_and: output of a 4-input AND gate. out_or: output of a 4-input OR
+gate.out_xor: output of a 4-input XOR gate</p>
+<p>构建一个具有四个输入 in[3:0] 的组合电路。有 3 个输出：</p>
+<p>out_and：4 输入 AND 门的输出。out_or：4 输入 OR 门的输出。out_xor：4
+输入 XOR 门的输出。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out_and<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out_or<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out_xor
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_and <span class="token operator">=</span> <span class="token operator">&amp;</span>in<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_or <span class="token operator">=</span> <span class="token operator">|</span>in<span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out_xor <span class="token operator">=</span> <span class="token operator">^</span>in<span class="token punctuation">;</span>
+
+    <span class="token comment">// 繁琐点的写法</span>
+    <span class="token comment">// assign out_and = in[3] &amp; in[2] &amp; in[1] &amp; in[0]; </span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/HDLBits%E5%88%B7%E9%A2%98/" class="category-chain-item">HDLBits刷题</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
+      
+        <a href="/tags/HDLBits/" class="print-no-link">#HDLBits</a>
+      
+        <a href="/tags/%E5%88%B7%E9%A2%98/" class="print-no-link">#刷题</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HDLBits刷题日记（三）</div>
+      <div>https://yao-jiangyu.github.io/HDLBits_three/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>小姚</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/GTY%E9%AB%98%E9%80%9F%E6%94%B6%E5%8F%91%E5%99%A8%EF%BC%88%E4%B8%80%EF%BC%89/" title="GTY高速收发器（一）：基本架构和时钟架构">
+                        <span class="hidden-mobile">GTY高速收发器（一）：基本架构和时钟架构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://myblogcomment-alpha.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎加入讨论，让我们的评论区热闹起来！使用魔法更加稳定哦！🎈 ~"}},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      京ICP证123456号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
