@@ -19,33 +19,27 @@
   <meta name="author" content="小姚">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、8b&#x2F;10b编码简介 8B&#x2F;10B 编码是 1983 年由 IBM 公司的 Al Widmer 和 Peter Franaszek 所提出的数据传输编码标准，目前已经被广泛应用到高速串行总线。8B&#x2F;10B 编码将待发送的 8 位数据转换成 10 位代码组，其目的是保证直流平衡，以及足够密集的电平转换。 在这些高速收发器的接收端需要通过 CDR 技术去恢复时钟与数据的相位关系，在这个">
+    <meta name="description" content="本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。            1、SPI简介 SPI (Serial Peripheral Interface) 是一种同步通信协议，可以实现微控制器和外围设备之间的数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="8b&#x2F;10b编码详解">
-<meta property="og:url" content="https://yao-jiangyu.github.io/8b10b/index.html">
+<meta property="og:title" content="三大低速总线之SPI详解">
+<meta property="og:url" content="https://yao-jiangyu.github.io/spi-introduction/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1、8b&#x2F;10b编码简介 8B&#x2F;10B 编码是 1983 年由 IBM 公司的 Al Widmer 和 Peter Franaszek 所提出的数据传输编码标准，目前已经被广泛应用到高速串行总线。8B&#x2F;10B 编码将待发送的 8 位数据转换成 10 位代码组，其目的是保证直流平衡，以及足够密集的电平转换。 在这些高速收发器的接收端需要通过 CDR 技术去恢复时钟与数据的相位关系，在这个">
+<meta property="og:description" content="本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。            1、SPI简介 SPI (Serial Peripheral Interface) 是一种同步通信协议，可以实现微控制器和外围设备之间的数">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-3.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-1.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-2.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-4.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-5.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-7.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/8b10b/image-6.png">
-<meta property="article:published_time" content="2025-02-05T02:30:00.000Z">
-<meta property="article:modified_time" content="2025-02-05T16:36:47.659Z">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/spi-introduction/image.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/spi-introduction/SPIMode.png">
+<meta property="article:published_time" content="2025-02-08T12:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-22T15:21:26.453Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="FPGA">
-<meta property="article:tag" content="数字编码">
-<meta property="article:tag" content="8b&#x2F;10b">
+<meta property="article:tag" content="通信协议">
+<meta property="article:tag" content="SPI">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/8b10b/image.png">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/spi-introduction/image.png">
   
   
   
-  <title>8b/10b编码详解 - Hexo</title>
+  <title>三大低速总线之SPI详解 - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -236,7 +230,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="8b/10b编码详解"></span>
+            <span id="subtitle" data-typed-text="三大低速总线之SPI详解"></span>
           
         </div>
 
@@ -247,8 +241,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-05 10:30" pubdate>
-          2025年2月5日 上午
+        <time datetime="2025-02-08 20:00" pubdate>
+          2025年2月8日 晚上
         </time>
       </span>
     
@@ -259,7 +253,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.7k 字
+          1.7k 字
         
       </span>
     
@@ -270,7 +264,7 @@
         
         
         
-          23 分钟
+          15 分钟
         
       </span>
     
@@ -316,173 +310,169 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">8b/10b编码详解</h1>
+            <h1 id="seo-header">三大低速总线之SPI详解</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="b10b编码简介">1、8b/10b编码简介</h1>
-<p>8B/10B 编码是 1983 年由 IBM 公司的 Al Widmer 和 Peter Franaszek
-所提出的数据传输编码标准，目前已经被广泛应用到高速串行总线。8B/10B
-编码将待发送的 8 位数据转换成 10
-位代码组，其目的是保证直流平衡，以及足够密集的电平转换。</p>
-<p>在这些高速收发器的接收端需要通过 CDR
-技术去恢复时钟与数据的相位关系，在这个过程中需要不断地检测数据边沿和数据中心，从而调整时钟和数据的相位，因此需要保证接收的数据不断变化，从而给
-CDR 提供足够多的待检测数据边沿。</p>
-<p>另外，高速接口电路一般采用交流耦合方式进行连接，在交流耦合电路中的信号线会接电容（隔直通交）。如果传输的数据在一段时间内全是
-1 或全是
-0，那么这段时间传输的信号可以等效成直流信号，会产生直流偏移，在通过电容时，有可能解码错误。</p>
-<p>因此，<strong>通过 8B/10B 编码，保证编码后的数据在一定时间内 0
-的个数与 1 的个数保持相等。</strong></p>
-<h1 id="b10b编码原理">2、8b/10b编码原理</h1>
-<p>8B/10B 编码的原理是将 8 位数据编码成 10 位数据，编码后的数据中 0 和 1
-的个数相等，以保证数据的直流平衡。</p>
-<p>当中 8bit 的原始数据可以分为两部分：<strong>低位的 5bit
-EDCBA(设其十进制数值为X)，高位的 3bit HGF(设其十进制数值为Y)，则该 8bit
-数据可以记为 D.X.Y。</strong> 比如待编码数据为 110_00011，高 3
-位数据的十进制为 6，低 5 位的十进制数据为 3，则 D.3.6 就表示
-110_00011。</p>
-<p>编码时，低 5bit 原数据 EDCBA 经过 5B/6B 编码成为 6bit 码 abcdei，高
-3bit 原数据 HGF 经 3B/4B 成为 4bit 码
-fghj，最后再将两部分组合起来形成一个 10bit 码
-abcdeifghj，如下图所示：</p>
-<figure>
-<img src="/img/8b10b/image.png" srcset="/img/loading.gif" lazyload alt="图 1 编码示意图" />
-<figcaption aria-hidden="true">图 1 编码示意图</figcaption>
-</figure>
-<p>另外，<strong>8B/10B 编码中还用到 12
-个控制字符，他们可以作为传输中帧起始、帧结束、传输空闲等状态标识，与数据字符的记法类似，控制字符一般记为
-K.X.Y。</strong> 8bit 数据有 256 种，加上 12 种控制字符，总共有 268
-种。10bit 数据有 1024 种，可以从 1024 种状态中选取 256 种 0 和 1
-个数相等的数据作为编码结果，在从剩下的数据中选取 12
-个作为控制字符，即常见的 K码。</p>
-<p>8B/10B 编码中将 K28.1、K28.5 和 K28.7 作为 K
-码的控制字符，称为“comma”。在任意数据组合中，comma
-只作为控制字符出现，而在数据部分不会出现，因此可以用 comma
-字符指示帧的开始和结束标志，或用来修正和数据流对齐的控制字符。</p>
-<h1 id="b10b编码表">3、8b/10b编码表</h1>
-<p>我们首先要搞清楚三个概念：</p>
+                <div class="note note-primary">
+            <p>本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。</p>
+          </div>
+<h1 id="spi简介">1、SPI简介</h1>
+<p>SPI (Serial Peripheral Interface)
+是一种同步通信协议，可以实现微控制器和外围设备之间的数据传输。它是一个全双工的主从协议，这意味着数据可以同时发送和接收。当主设备向从设备发送数据时，从设备可以将数据发送回主设备，而无需等待单独的读操作。它通常用于嵌入式系统，特别是需要高速数据传输的应用程序。</p>
+<h2 id="引脚配置-mosimisosclk-和-cs">1.1、引脚配置： MOSI，MISO，SCLK 和
+CS</h2>
+<p>SPI 通信需要四个引脚：</p>
 <ul>
-<li><strong>编码对照表</strong>：用来对原始数据进行编码的查找表，在对原始
-8bit
-数据进行编码时，不需要进行一系列复杂的算法运算（自己推算也可），而是直接从查找表上去查找
-8bit 原始数据对应的 10bit 编码数据。</li>
-<li><strong>Paired
-disparity</strong>：成对差异即“1”的个数和“0”的个数相差 2
-个（完美平衡除外）。不论是 5B/6B编码还是 3B/4B
-编码，最终编码后的数据“1”和“0”的个数对比只有三种情况，第一种是“1”的个数比“0”的个数多
-2 个，第二种是“0”的个数比“1”的个数多 2
-个，第三种是“1”的个数和“0”的个数一样多。其中“1”的个数和“0”的个数一样多又称之为完美平衡，在完美平衡的状态下是不需要进行补偿的，只不过由于完美平衡的编码数量无法满足所有数据的编码需求，因此完美平衡实际是无法做到的。</li>
+<li><p>MOSI (Master Output Slave Input) : 主设备使用 MOSI
+引脚向从设备传输数据。</p></li>
+<li><p>MISO (Master Input Slave Output) : 从设备使用 MISO
+引脚将数据传输回主设备。</p></li>
+<li><p>SCLK (Serial Clock) : SCLK
+引脚提供时钟信号，用于同步主从设备之间的数据传输。</p></li>
+<li><p>CS (Slave Select) : CS
+引脚被主设备用来选择它想要与之通信的从设备。</p></li>
 </ul>
-<div class="note note-success">
-            <p>5位数据总共有32种状态，编码结果有6位数据，0和1数量相等的只有000_111、001_011…、110_001、111_000等20种状态。其中000_111和111_000存在三个连续相同的状态，并没有被使用。导致编码后0和1数据相等的结果就只有18种状态，并不能满足输入5位数据的32种数据状态，3B4B编码也有同样的问题。此时设计编码的人提出，一次编码如果不能保证编码结果0和1个数相等，那么可以让连续两次编码结果的0和1相等，也能满足要求。</p>
-          </div>
+<h2 id="spi-数据传输">1.2、SPI 数据传输</h2>
+<p>数据传输可以由主设备或从设备启动。SPI
+数据传输过程包括以下几个步骤：</p>
+<p><strong>选择从设备：</strong> 主设备通过拉低 CS
+线低来选择从设备。这将告诉从设备它正在被寻址，并且应该准备接收或传输数据。</p>
+<p><strong>配置数据传输参数：</strong>
+主设备设置数据传输参数，如时钟频率、数据格式和每个事务要传输的位数。</p>
+<p><strong>发送数据：</strong> 主设备通过 MOSI
+线路向从设备发送数据。数据以串行格式发送，从最重要的位开始，一次一位。</p>
+<p><strong>接收数据：</strong> 在发送数据时，主设备也通过 MISO
+线从从设备接收数据。接收到的数据也是串行格式，一次一位，从最有意义的位开始。</p>
+<p><strong>时钟数据：</strong> 数据传输由 SCK
+线上的时钟信号同步。所述时钟信号由所述主设备产生，所述从设备将其数据传输与所述时钟信号同步。</p>
+<p><strong>完成数据传输：</strong> 数据传输完成后，主设备将拉高 CS
+行，表明从设备不再被寻址。然后，从设备可以释放在数据传输期间使用的任何资源。</p>
+<figure>
+<img
+src="/img/spi-introduction/img_temp_6421dddc954f14-18738137-83373518.png" srcset="/img/loading.gif" lazyload
+alt="图 1 数据传输示意图" />
+<figcaption aria-hidden="true">图 1 数据传输示意图</figcaption>
+</figure>
+<h2 id="spi-寄存器级数据传输">1.3、SPI 寄存器级数据传输</h2>
+<p>在寄存器级，数据一次在主设备和从设备之间传输一个字节。数据传输发生在设备中的特定寄存器之间。每个寄存器都包含一个需要传输的特定函数或数据。</p>
 <ul>
-<li><strong>Running disparity</strong>：运行不一致，在上文的 Paired
-disparity
-中已经说过编码后的数据“1”的个数和“0”的个数不可能做到一直完美平衡（因为只有少数数据编码后是完美平衡，大多数数据编码后是成对差异的），要么“1”的个数比“0”多，要么反之。我们称这种“0”“
-1”个数差为“极性偏差”，用 RD 表示，当“1”的个数比“0”多的时候 RD
-的值为“+1”，反过来 RD 的值为“-1”。</li>
+<li><p>主设备在 SCLK 线路上发送时钟信号来同步数据传输。</p></li>
+<li><p>主设备将 MOSI
+线设置为适当的逻辑电平，以便将字节的第一位发送给从设备。</p></li>
+<li><p>从设备接收 MISO 线上的位并将其存储在移位寄存器中。</p></li>
+<li><p>时钟信号被切换，字节的下一位由 MOSI 线上的主设备发送。</p></li>
+<li><p>从设备接收 MISO 线上的位并将其移入移位寄存器。</p></li>
+<li><p>这个过程一直持续到所有 8 位的字节都被传输完毕为止。</p></li>
 </ul>
-<div class="note note-success">
-            <p>如果编码结果的1和0个数相等，称为平衡编码，此时RD的数值保持不变。如果编码结果1和0个数不等，称为非平衡编码，此时RD的数值翻转，下次编码采用RD对应数值的编码作为编码结果。</p>
-          </div>
-<p>搞清楚这三个概念后，我们就可以开始进行 8B/10B 编码了。8B/10B 编码是由
-5B/6B 编码和 3B/4B 编码组成的，编码的过程是先进行 5B/6B 编码，再进行
-3B/4B 编码，最后将两部分编码结果组合成 10bit 编码。在编码的过程中，RD
-的数值会不断翻转，每次编码的起始 RD 都是上次编码结果的 RD。</p>
-<div class="note note-info">
-            <p><strong>上次8B/10B编码结果的RD数值将用作本次5B/6B编码的起始RD，而3B/4B编码的起始RD等于上次5B/6B编码结果的RD，3B/4B编码结果的RD作为本次8B/10B编码的RD。</strong></p>
-          </div>
-<p>对应的编码状态跳转如下图所示：</p>
+<p><img src="/img/spi-introduction/image.png" srcset="/img/loading.gif" lazyload
+alt="图 2 寄存器级数据传输示意图（a）" /> <img
+src="/img/spi-introduction/img_temp_64207d4bad0069-44022866-18941375.gif" srcset="/img/loading.gif" lazyload
+alt="图 2 寄存器级数据传输示意图（b）" /></p>
+<h2 id="菊花链连接多个设备">1.4、菊花链：连接多个设备</h2>
+<p>SPI 支持多个设备的菊花链，允许多个设备共享一个 SPI
+总线。在菊花链配置中，每个从设备的 CS 引脚连接到前一个从设备的 MOSI
+引脚，形成一个链。主设备发送单个 CS
+信号，选择链路中的第一个从设备，然后通过发送数据和时钟信号与链路中的所有从设备进行通信。</p>
 <figure>
-<img src="/img/8b10b/image-3.png" srcset="/img/loading.gif" lazyload alt="图 2 编码状态跳转示意图" />
-<figcaption aria-hidden="true">图 2 编码状态跳转示意图</figcaption>
+<img
+src="/img/spi-introduction/img_temp_6421dddcbf7866-20126192-46942657.png" srcset="/img/loading.gif" lazyload
+alt="图 3 连接多个设备" />
+<figcaption aria-hidden="true">图 3 连接多个设备</figcaption>
 </figure>
-<h2 id="b6b-编码表">3.1 5B/6B 编码表</h2>
+<h2
+id="错误检测时钟极性和相位等方面">1.5、错误检测，时钟极性和相位等方面</h2>
+<p>SPI 通信还包括其他方面，如错误检测、时钟极性和时钟相位。像 CRC
+(循环冗余校验)
+这样的错误检测机制可以用来确保数据的完整性。时钟极性和时钟相位设置决定数据何时被采样和何时被传输，允许协议的灵活性。</p>
+<p>SPI 总线传输一共有 4 种模式，这 4
+种模式分别由<strong>时钟极性（CPOL，Clock
+Polarity）和时钟相位（CPHA，Clock Phase）来定义，其中 CPOL 参数规定了
+SCLK 时钟信号空闲状态的电平，CPHA 规定了数据是在 SCLK
+时钟的上升沿被采样还是下降沿被采样。</strong></p>
+<ul>
+<li><p>时钟极性决定 SPI 总线空闲时的 SCLK
+时钟信号是高电平还是低电平。</p>
+<p>CPOL = 1：表示空闲时是高电平；</p>
+<p>CPOL = 0：表示空闲时是低电平。</p></li>
+<li><p>时钟相位决定 SPI 总线从哪个跳变沿开始采样数据。</p>
+<p>CPHA = 0：在时钟信号SCK的第1个跳变沿采样；</p>
+<p>CPHA = 1：在时钟信号SCK的第2个跳变沿采样。</p></li>
+</ul>
+<table style="width:100%;">
+
+<thead>
+<tr>
+<th style="text-align: center;">SPI 模式</th>
+<th style="text-align: center;">CPOL</th>
+<th style="text-align: center;">CPHA</th>
+<th style="text-align: center;">空闲时 SCLK 时钟</th>
+<th style="text-align: center;">数据采样时刻</th>
+<th style="text-align: center;">数据切换时刻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">低电平</td>
+<td style="text-align: center;">上升沿</td>
+<td style="text-align: center;">下降沿</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">低电平</td>
+<td style="text-align: center;">下降沿</td>
+<td style="text-align: center;">上升沿</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">高电平</td>
+<td style="text-align: center;">下降沿</td>
+<td style="text-align: center;">上升沿</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">高电平</td>
+<td style="text-align: center;">上升沿</td>
+<td style="text-align: center;">下降沿</td>
+</tr>
+</tbody>
+</table>
 <figure>
-<img src="/img/8b10b/image-1.png" srcset="/img/loading.gif" lazyload alt="图 3 5B/6B 编码表" />
-<figcaption aria-hidden="true">图 3 5B/6B 编码表</figcaption>
+<img src="/img/spi-introduction/SPIMode.png" srcset="/img/loading.gif" lazyload alt="图 4 SPI Mode" />
+<figcaption aria-hidden="true">图 4 SPI Mode</figcaption>
 </figure>
-<p>5bit 的数据位宽一共对应 32 个原始数据，所以在上图的 5B/6B
-编码中一共拥有 0~31
-个原始数据，其中“EDCBA”表示原始数据，“abcdei”表示编码后的数据。表中可以看到绝大多数数据都是有两个编码对应的，在实际使用的时候根据
-RD 的值来选择其中一个编码使用；还有一部分数据后面是携带标记符号的，如
-D.23、D.27、D.29、D.30，这些带标记符号的既是原始数据又是控制编码的一部分，主要用于
-K.x.7。其中还有一个 K28
-比较特殊，这是一个独立的控制编码不与数据复用，主要用于控制编码
-K.28.y。</p>
-<h2 id="b4b-编码表">3.2 3B/4B 编码表</h2>
-<figure>
-<img src="/img/8b10b/image-2.png" srcset="/img/loading.gif" lazyload alt="图 4 3B/4B 编码表" />
-<figcaption aria-hidden="true">图 4 3B/4B 编码表</figcaption>
-</figure>
-<p>在 3B/4B 编码当中大家要注意的是数字 7 有两种编码，分别是 D.x.P7 和
-D.x.A7，为什么要用两种编码方式呢？</p>
-<div class="note note-success">
-            <p>主要是避免出现连续的 5 个“0”或“1”，例如当 RD 为 1 时对 D(11,7)进行编码，其中 11 编码后的数值是 110100 而 7 就只能使用 D.x.A7这种编码规则了，如果使用 D.x.P7 的编码规则，最后编码数据就成了1101000001，可以看到出现了连续的 5个“0”。因此大家在编码的时候一定要选择合适的编码规则。</p>
-          </div>
-<p>在控制码的编码表中可以看到 K.x.1、 K.x.5、 K.x.7
-这三个控制码被特殊标记了，这三个特殊编码会和上文 5B/6B 编码中提到的 K28
-连用，组成 K.28.1、K.28.5 和 K.28.7
-三个特殊编码，这三个特殊编码是会出现连续 5
-个“0”或“1”的，这种特殊码又称之为“comma
-symbols”。它们不会出现在数据负荷部分，并且只要出现就一定是控制码，通常用它们作为帧的开始和结束标志，或者数据流对齐的控制字符。</p>
-<p>除了K.28.1、K.28.5 和 K.28.7 这三个特殊编码外还要注意上文 5B/6B
-编码中提到的 D.23、D.27、D.29、D.30 这几个特殊数值，在控制码中他们只能和
-K.x.7 连用组成 K.23.7、K.27.7、K.29.7、K.30.7
-这四个特殊控制码。原因和数字 7 的两套编码规则一样，避免出现连续的 5
-个“0”或“1”。</p>
-<p><strong>完整的控制码编码表如下：</strong></p>
-<figure>
-<img src="/img/8b10b/image-4.png" srcset="/img/loading.gif" lazyload alt="图 5 控制码编码示意图" />
-<figcaption aria-hidden="true">图 5 控制码编码示意图</figcaption>
-</figure>
-<h1 id="b10b编码实例">4、8b/10b编码实例</h1>
-<p>Xilinx<a
-target="_blank" rel="noopener" href="https://docs.amd.com/v/u/en-US/ug476_7Series_Transceivers">UG476</a>手册的附录有所有
-8B/10B 编码数据的结果, 以及对应的RD值。这里以手册中的数据为例，对 8B/10B
-编码进行实例分析。</p>
-<div class="note note-info">
-            <p><strong>问题一</strong></p><p>请问 D.8.3 的 8B/10B 编码结果是多少？</p>
-          </div>
-<p>第一个原始数据在进行编码的时候是默认 RD 为“-1”。D.8 的 5B/6B
-编码结果为 111001，5B/6B 编码完成后，RD 翻转变为 1。将 RD=1 作为 D.x.3
-的 3B/4B 编码起始 RD，根据查表得编码结果为 0011，再次将 RD
-翻转，作为本次 8B/10B 编码结果的 RD。因此<strong>起始 RD=-1 的编码结果为
-111001_0011。</strong></p>
-<p>与正确答案一致，编码结果为 111001_0011：</p>
-<figure>
-<img src="/img/8b10b/image-5.png" srcset="/img/loading.gif" lazyload alt="图 6 D.8.3 的 8B/10B 编码结果" />
-<figcaption aria-hidden="true">图 6 D.8.3 的 8B/10B
-编码结果</figcaption>
-</figure>
-<div class="note note-info">
-            <p><strong>问题二</strong></p><p>当前 RD=1，则 K.28.5、D.2.6、D.23.4 的编码结果依次是多少，且最终的 RD是多少？</p>
-          </div>
-<p>首先 RD=1 时，查得 k.28 编码结果为 110000，这是不平衡编码，RD
-的最终结果会翻转，RD=-1；K.x.5 的3B/4B编码是 0101，这是平衡编码，因此 RD
-不变，等于 -1。</p>
-<p>因此 D.2.6 的起始 RD=-1，首先 D.2 的 5B/6B 编码结果为 101101，RD
-翻转变为 1。D.x.6 的 3B/4B 编码结果为 0110，由于 D.x.6 是平衡编码，因此
-RD 保持不变，等于 1。故 D.2.6 的编码结果为 101101_0110，RD 最终为
-1。</p>
-<p>最后，D.23.4 的起始 RD=1，D.23.4 的 5B6B 编码结果为 000101，RD 翻转为
--1。之后 D.x.4 的编码结果为 1101，RD 的极性再次翻转为 1。</p>
-<p>所以 K.28.5、D.2.6、D.23.4 的编码结果依次是
-110000_0101、101101_0110、000101_1101，RD 的最终取值为 1。
-D.2.6、D.23.4的手册查表结果如下图所示，与上述计算结果保持相同，证明编码规则没有问题。</p>
-<figure>
-<img src="/img/8b10b/image-7.png" srcset="/img/loading.gif" lazyload alt="图 7 D.2.6 的 8B/10B 编码结果" />
-<figcaption aria-hidden="true">图 7 D.2.6 的 8B/10B
-编码结果</figcaption>
-</figure>
-<figure>
-<img src="/img/8b10b/image-6.png" srcset="/img/loading.gif" lazyload
-alt="图 8 D.23.4 的 8B/10B 编码结果" />
-<figcaption aria-hidden="true">图 8 D.23.4 的 8B/10B
-编码结果</figcaption>
-</figure>
+<h2 id="spi-的优缺点">1.6、SPI 的优缺点</h2>
+<h3 id="优点">1.6.1、优点</h3>
+<p>与 I2C 和 UART 等其他通信协议相比，SPI 有以下几个优点：</p>
+<p><strong>高速数据传输：</strong> 与其他协议相比，SPI
+可以实现更高的数据传输速率，使其成为需要快速数据传输的应用程序的极佳选择。</p>
+<p><strong>低开销：</strong> 由于 SPI
+对数据和时钟信号使用单独的线路，因此与通信协议相关的开销最小。</p>
+<p><strong>简单协议：</strong> SPI
+是一个开销较少的简单协议，使其成为一些应用程序更有效的选择，易于在硬件和软件中实现。</p>
+<p><strong>全双工通信：</strong> SPI
+允许在两个方向上同时传输数据，比其他需要单独读写操作的协议 (如 I2C)
+更有效率。</p>
+<p><strong>灵活的配置：</strong> SPI
+通信的不同模式允许灵活地配置通信的时间和极性，同时支持多个设备的菊花链，使其成为一些应用程序更灵活的选择。</p>
+<h3 id="缺点">1.6.2、缺点</h3>
+<p>使用 SPI 通信的一些缺点包括：</p>
+<p><strong>有限的距离：</strong> SPI
+通常用于设备之间的短距离通信，不适合长距离通信。</p>
+<p><strong>设备数量有限：</strong> 尽管 SPI
+允许多个设备连接到同一总线，但设备数量受到可用 CS 线路数量的限制。</p>
+<p><strong>缺乏错误检测：</strong> 与其他串行通信协议 (如 CAN) 不同，SPI
+没有内置的纠错机制，这可能使其不太适合需要高可靠性的应用程序。</p>
 
                 
               </div>
@@ -501,7 +491,7 @@ alt="图 8 D.23.4 的 8B/10B 编码结果" />
     
       <span class="category-chain">
         
-  <a href="/categories/%E9%AB%98%E9%80%9F%E6%94%B6%E5%8F%91%E5%99%A8/" class="category-chain-item">高速收发器</a>
+  <a href="/categories/%E4%B8%89%E5%A4%A7%E4%BD%8E%E9%80%9F%E6%80%BB%E7%BA%BF/" class="category-chain-item">三大低速总线</a>
   
   
 
@@ -518,9 +508,9 @@ alt="图 8 D.23.4 的 8B/10B 编码结果" />
       
         <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
       
-        <a href="/tags/%E6%95%B0%E5%AD%97%E7%BC%96%E7%A0%81/" class="print-no-link">#数字编码</a>
+        <a href="/tags/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" class="print-no-link">#通信协议</a>
       
-        <a href="/tags/8b-10b/" class="print-no-link">#8b/10b</a>
+        <a href="/tags/SPI/" class="print-no-link">#SPI</a>
       
     </div>
   
@@ -532,8 +522,8 @@ alt="图 8 D.23.4 的 8B/10B 编码结果" />
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>8b/10b编码详解</div>
-      <div>https://yao-jiangyu.github.io/8b10b/</div>
+      <div>三大低速总线之SPI详解</div>
+      <div>https://yao-jiangyu.github.io/spi-introduction/</div>
     </div>
     <div class="license-meta">
       
@@ -545,7 +535,7 @@ alt="图 8 D.23.4 的 8B/10B 编码结果" />
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月5日</div>
+          <div>2025年2月8日</div>
         </div>
       
       
@@ -589,15 +579,21 @@ alt="图 8 D.23.4 的 8B/10B 编码结果" />
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/uart-introduction/" title="三大低速总线之UART详解">
+                      <a href="/HDLBits_one/" title="HDLBits刷题日记（一）">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">三大低速总线之UART详解</span>
+                        <span class="hidden-mobile">HDLBits刷题日记（一）</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/uart-introduction/" title="三大低速总线之UART详解">
+                        <span class="hidden-mobile">三大低速总线之UART详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

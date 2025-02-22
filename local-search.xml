@@ -20,11 +20,11 @@
     
     <tags>
       
-      <tag>FPGA</tag>
-      
       <tag>HDLBits</tag>
       
       <tag>刷题</tag>
+      
+      <tag>FPGA</tag>
       
     </tags>
     
@@ -76,11 +76,11 @@
     
     <tags>
       
-      <tag>FPGA</tag>
-      
       <tag>HDLBits</tag>
       
       <tag>刷题</tag>
+      
+      <tag>FPGA</tag>
       
     </tags>
     
@@ -105,11 +105,40 @@
     
     <tags>
       
-      <tag>FPGA</tag>
-      
       <tag>HDLBits</tag>
       
       <tag>刷题</tag>
+      
+      <tag>FPGA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>三大低速总线之SPI详解</title>
+    <link href="/spi-introduction/"/>
+    <url>/spi-introduction/</url>
+    
+    <content type="html"><![CDATA[<div class="note note-primary">            <p>本科阶段在搞硬件设计的时候就经常碰到三大低速总线(UART、SPI、IIC)，奈何好记忆不如烂笔头，趁着现在基于github搭建了个人博客，就把这三大低速总线的原理和应用做一个详细的总结吧，以便日后查阅。</p>          </div><h1 id="spi简介">1、SPI简介</h1><p>SPI (Serial Peripheral Interface)是一种同步通信协议，可以实现微控制器和外围设备之间的数据传输。它是一个全双工的主从协议，这意味着数据可以同时发送和接收。当主设备向从设备发送数据时，从设备可以将数据发送回主设备，而无需等待单独的读操作。它通常用于嵌入式系统，特别是需要高速数据传输的应用程序。</p><h2 id="引脚配置-mosimisosclk-和-cs">1.1、引脚配置： MOSI，MISO，SCLK 和CS</h2><p>SPI 通信需要四个引脚：</p><ul><li><p>MOSI (Master Output Slave Input) : 主设备使用 MOSI引脚向从设备传输数据。</p></li><li><p>MISO (Master Input Slave Output) : 从设备使用 MISO引脚将数据传输回主设备。</p></li><li><p>SCLK (Serial Clock) : SCLK引脚提供时钟信号，用于同步主从设备之间的数据传输。</p></li><li><p>CS (Slave Select) : CS引脚被主设备用来选择它想要与之通信的从设备。</p></li></ul><h2 id="spi-数据传输">1.2、SPI 数据传输</h2><p>数据传输可以由主设备或从设备启动。SPI数据传输过程包括以下几个步骤：</p><p><strong>选择从设备：</strong> 主设备通过拉低 CS线低来选择从设备。这将告诉从设备它正在被寻址，并且应该准备接收或传输数据。</p><p><strong>配置数据传输参数：</strong>主设备设置数据传输参数，如时钟频率、数据格式和每个事务要传输的位数。</p><p><strong>发送数据：</strong> 主设备通过 MOSI线路向从设备发送数据。数据以串行格式发送，从最重要的位开始，一次一位。</p><p><strong>接收数据：</strong> 在发送数据时，主设备也通过 MISO线从从设备接收数据。接收到的数据也是串行格式，一次一位，从最有意义的位开始。</p><p><strong>时钟数据：</strong> 数据传输由 SCK线上的时钟信号同步。所述时钟信号由所述主设备产生，所述从设备将其数据传输与所述时钟信号同步。</p><p><strong>完成数据传输：</strong> 数据传输完成后，主设备将拉高 CS行，表明从设备不再被寻址。然后，从设备可以释放在数据传输期间使用的任何资源。</p><figure><imgsrc="/img/spi-introduction/img_temp_6421dddc954f14-18738137-83373518.png"alt="图 1 数据传输示意图" /><figcaption aria-hidden="true">图 1 数据传输示意图</figcaption></figure><h2 id="spi-寄存器级数据传输">1.3、SPI 寄存器级数据传输</h2><p>在寄存器级，数据一次在主设备和从设备之间传输一个字节。数据传输发生在设备中的特定寄存器之间。每个寄存器都包含一个需要传输的特定函数或数据。</p><ul><li><p>主设备在 SCLK 线路上发送时钟信号来同步数据传输。</p></li><li><p>主设备将 MOSI线设置为适当的逻辑电平，以便将字节的第一位发送给从设备。</p></li><li><p>从设备接收 MISO 线上的位并将其存储在移位寄存器中。</p></li><li><p>时钟信号被切换，字节的下一位由 MOSI 线上的主设备发送。</p></li><li><p>从设备接收 MISO 线上的位并将其移入移位寄存器。</p></li><li><p>这个过程一直持续到所有 8 位的字节都被传输完毕为止。</p></li></ul><p><img src="/img/spi-introduction/image.png"alt="图 2 寄存器级数据传输示意图（a）" /> <imgsrc="/img/spi-introduction/img_temp_64207d4bad0069-44022866-18941375.gif"alt="图 2 寄存器级数据传输示意图（b）" /></p><h2 id="菊花链连接多个设备">1.4、菊花链：连接多个设备</h2><p>SPI 支持多个设备的菊花链，允许多个设备共享一个 SPI总线。在菊花链配置中，每个从设备的 CS 引脚连接到前一个从设备的 MOSI引脚，形成一个链。主设备发送单个 CS信号，选择链路中的第一个从设备，然后通过发送数据和时钟信号与链路中的所有从设备进行通信。</p><figure><imgsrc="/img/spi-introduction/img_temp_6421dddcbf7866-20126192-46942657.png"alt="图 3 连接多个设备" /><figcaption aria-hidden="true">图 3 连接多个设备</figcaption></figure><h2id="错误检测时钟极性和相位等方面">1.5、错误检测，时钟极性和相位等方面</h2><p>SPI 通信还包括其他方面，如错误检测、时钟极性和时钟相位。像 CRC(循环冗余校验)这样的错误检测机制可以用来确保数据的完整性。时钟极性和时钟相位设置决定数据何时被采样和何时被传输，允许协议的灵活性。</p><p>SPI 总线传输一共有 4 种模式，这 4种模式分别由<strong>时钟极性（CPOL，ClockPolarity）和时钟相位（CPHA，Clock Phase）来定义，其中 CPOL 参数规定了SCLK 时钟信号空闲状态的电平，CPHA 规定了数据是在 SCLK时钟的上升沿被采样还是下降沿被采样。</strong></p><ul><li><p>时钟极性决定 SPI 总线空闲时的 SCLK时钟信号是高电平还是低电平。</p><p>CPOL = 1：表示空闲时是高电平；</p><p>CPOL = 0：表示空闲时是低电平。</p></li><li><p>时钟相位决定 SPI 总线从哪个跳变沿开始采样数据。</p><p>CPHA = 0：在时钟信号SCK的第1个跳变沿采样；</p><p>CPHA = 1：在时钟信号SCK的第2个跳变沿采样。</p></li></ul><table style="width:100%;"><thead><tr><th style="text-align: center;">SPI 模式</th><th style="text-align: center;">CPOL</th><th style="text-align: center;">CPHA</th><th style="text-align: center;">空闲时 SCLK 时钟</th><th style="text-align: center;">数据采样时刻</th><th style="text-align: center;">数据切换时刻</th></tr></thead><tbody><tr><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">0</td><td style="text-align: center;">低电平</td><td style="text-align: center;">上升沿</td><td style="text-align: center;">下降沿</td></tr><tr><td style="text-align: center;">1</td><td style="text-align: center;">0</td><td style="text-align: center;">1</td><td style="text-align: center;">低电平</td><td style="text-align: center;">下降沿</td><td style="text-align: center;">上升沿</td></tr><tr><td style="text-align: center;">2</td><td style="text-align: center;">1</td><td style="text-align: center;">0</td><td style="text-align: center;">高电平</td><td style="text-align: center;">下降沿</td><td style="text-align: center;">上升沿</td></tr><tr><td style="text-align: center;">3</td><td style="text-align: center;">1</td><td style="text-align: center;">1</td><td style="text-align: center;">高电平</td><td style="text-align: center;">上升沿</td><td style="text-align: center;">下降沿</td></tr></tbody></table><figure><img src="/img/spi-introduction/SPIMode.png" alt="图 4 SPI Mode" /><figcaption aria-hidden="true">图 4 SPI Mode</figcaption></figure><h2 id="spi-的优缺点">1.6、SPI 的优缺点</h2><h3 id="优点">1.6.1、优点</h3><p>与 I2C 和 UART 等其他通信协议相比，SPI 有以下几个优点：</p><p><strong>高速数据传输：</strong> 与其他协议相比，SPI可以实现更高的数据传输速率，使其成为需要快速数据传输的应用程序的极佳选择。</p><p><strong>低开销：</strong> 由于 SPI对数据和时钟信号使用单独的线路，因此与通信协议相关的开销最小。</p><p><strong>简单协议：</strong> SPI是一个开销较少的简单协议，使其成为一些应用程序更有效的选择，易于在硬件和软件中实现。</p><p><strong>全双工通信：</strong> SPI允许在两个方向上同时传输数据，比其他需要单独读写操作的协议 (如 I2C)更有效率。</p><p><strong>灵活的配置：</strong> SPI通信的不同模式允许灵活地配置通信的时间和极性，同时支持多个设备的菊花链，使其成为一些应用程序更灵活的选择。</p><h3 id="缺点">1.6.2、缺点</h3><p>使用 SPI 通信的一些缺点包括：</p><p><strong>有限的距离：</strong> SPI通常用于设备之间的短距离通信，不适合长距离通信。</p><p><strong>设备数量有限：</strong> 尽管 SPI允许多个设备连接到同一总线，但设备数量受到可用 CS 线路数量的限制。</p><p><strong>缺乏错误检测：</strong> 与其他串行通信协议 (如 CAN) 不同，SPI没有内置的纠错机制，这可能使其不太适合需要高可靠性的应用程序。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>三大低速总线</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>FPGA</tag>
+      
+      <tag>通信协议</tag>
+      
+      <tag>SPI</tag>
       
     </tags>
     
@@ -163,9 +192,9 @@
     
     <tags>
       
-      <tag>数字编码</tag>
-      
       <tag>FPGA</tag>
+      
+      <tag>数字编码</tag>
       
       <tag>8b/10b</tag>
       
