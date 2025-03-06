@@ -19,27 +19,29 @@
   <meta name="author" content="小姚">
   <meta name="keywords" content="">
   
-    <meta name="description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Getting Started Problem 0 : Step one Build a circuit with no inputs and one output. That output shoul">
+    <meta name="description" content="在学习科研的闲暇之余，打算记录一些FPGA基础知识，方便后续自己的查阅复习，如果能帮助到其他同学那就更好了。本文主要介绍同步FIFO的实现原理，内容如有不妥之处，欢迎评论区指正，共同学习进步。            1、FIFO概述 FIFO（First In First Out）是一种先进先出的数据存储、缓存器。我们知道一般的存储器是用外部的读写地址来进行读写，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HDLBits刷题日记（一）">
-<meta property="og:url" content="https://yao-jiangyu.github.io/HDLBits_one/index.html">
+<meta property="og:title" content="同步FIFO详解">
+<meta property="og:url" content="https://yao-jiangyu.github.io/FIFO/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Getting Started Problem 0 : Step one Build a circuit with no inputs and one output. That output shoul">
+<meta property="og:description" content="在学习科研的闲暇之余，打算记录一些FPGA基础知识，方便后续自己的查阅复习，如果能帮助到其他同学那就更好了。本文主要介绍同步FIFO的实现原理，内容如有不妥之处，欢迎评论区指正，共同学习进步。            1、FIFO概述 FIFO（First In First Out）是一种先进先出的数据存储、缓存器。我们知道一般的存储器是用外部的读写地址来进行读写，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_one/image.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_one/image-1.png">
-<meta property="article:published_time" content="2025-02-16T02:00:00.000Z">
-<meta property="article:modified_time" content="2025-02-16T08:59:07.822Z">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/%E5%90%8C%E6%AD%A5fifo/image.gif">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/%E5%90%8C%E6%AD%A5fifo/image-1.gif">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/%E5%90%8C%E6%AD%A5fifo/image.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/%E5%90%8C%E6%AD%A5fifo/image1.png">
+<meta property="article:published_time" content="2025-03-05T12:59:00.000Z">
+<meta property="article:modified_time" content="2025-03-06T03:01:11.194Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FIFO">
 <meta property="article:tag" content="FPGA">
-<meta property="article:tag" content="HDLBits">
-<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/HDLBits_one/image.png">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/%E5%90%8C%E6%AD%A5fifo/image.gif">
   
   
   
-  <title>HDLBits刷题日记（一） - Hexo</title>
+  <title>同步FIFO详解 - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -230,7 +232,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="HDLBits刷题日记（一）"></span>
+            <span id="subtitle" data-typed-text="同步FIFO详解"></span>
           
         </div>
 
@@ -241,8 +243,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-16 10:00" pubdate>
-          2025年2月16日 上午
+        <time datetime="2025-03-05 20:59" pubdate>
+          2025年3月5日 晚上
         </time>
       </span>
     
@@ -253,7 +255,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          840 字
+          1.6k 字
         
       </span>
     
@@ -264,7 +266,7 @@
         
         
         
-          8 分钟
+          14 分钟
         
       </span>
     
@@ -310,99 +312,158 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">HDLBits刷题日记（一）</h1>
+            <h1 id="seo-header">同步FIFO详解</h1>
             
             
               <div class="markdown-body">
                 
                 <div class="note note-primary">
-            <p>打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。</p>
+            <p>在学习科研的闲暇之余，打算记录一些FPGA基础知识，方便后续自己的查阅复习，如果能帮助到其他同学那就更好了。本文主要介绍同步FIFO的实现原理，内容如有不妥之处，欢迎评论区指正，共同学习进步。</p>
           </div>
-<h1 id="getting-started">1、Getting Started</h1>
-<h2 id="problem-0-step-one">Problem 0 : Step one</h2>
-<p>Build a circuit with no inputs and one output. That output should
-always drive 1 (or logic high).</p>
-<p>构建一个电路，没有输入端口，只有一个输出端口，输出端口时钟驱动逻辑 1
-，即逻辑高电平。</p>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
-    <span class="token keyword">output</span> one
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">assign</span> one <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
-
-<span class="token keyword">endmodule</span></code></pre></div></figure>
-<div class="note note-success">
-            <p>1 在数字逻辑中代表 logic high，而 0 代表 logic low。</p>
-          </div>
-<h2 id="problem-1-zero">Problem 1 : Zero</h2>
-<p>Build a circuit with no inputs and one output that outputs a constant
-0.</p>
-<p>构建一个电路，没有输入端口，只有一个输出端口，但这次输出端口时钟驱动逻辑
-0 ，即逻辑低电平。</p>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
-    <span class="token keyword">output</span> zero
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Module body starts after semicolon</span>
-    <span class="token keyword">assign</span> zero <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
-
-<span class="token keyword">endmodule</span></code></pre></div></figure>
-<h1 id="verilog-language---basics">2、Verilog Language - Basics</h1>
-<h2 id="problem-2-wire">Problem 2 : Wire</h2>
-<p>Create a module with one input and one output that behaves like a
-wire.</p>
-<p>创建一个具有一个输入和一个输出的模块，其行为类似于导线（wire）。</p>
-<p>不同于物理导线，Verilog中的导线（和其他信号）是有<strong>方向性</strong>的。这意味着信息只能从源（source）单向流向接收端（sink）（源通常也被称为驱动器，用于向导线驱动一个值）。在Verilog的"连续赋值"语句中（<code>assign left_side = right_side;</code>），右侧信号的值被驱动到左侧的导线上。这种赋值被称为"连续的"，是因为即使右侧的值发生变化，赋值也会持续进行。连续赋值不是一次性的事件。</p>
-<p>模块的端口也具有方向性（通常是输入或输出）。输入端口由模块外部的元件驱动，而输出端口则驱动模块外部的元件。从模块内部来看，输入端口是一个驱动器或源，而输出端口是一个接收端。</p>
-<p>下图说明了电路的每个部分如何对应Verilog代码的每个位。模块和端口声明创建了电路的黑色部分。我们的任务是通过添加一个<code>assign</code>语句来创建一条导线（绿色部分），将输入(<code>in</code>)连接到输出(<code>out</code>)。模块外部的部分不是我们需要关心的，但应该知道，我们设计的电路将通过官方的测试工具连接到<code>top_module</code>的端口来进行测试。</p>
+<h1 id="fifo概述">1、FIFO概述</h1>
+<p>FIFO（First In First
+Out）是一种先进先出的数据存储、缓存器。我们知道一般的存储器是用外部的读写地址来进行读写，而FIFO这种存储器的结构并不需要外部的读写地址而是通过内部的读写指针自动的加一操作来控制读写，这也就决定了FIFO只能顺序的读写数据。FIFO
+本质上是由 RAM 加读写控制逻辑构成的一种先进先出的数据缓冲器。</p>
+<p>FIFO 有两种类型：同步 FIFO 和异步 FIFO。同步 FIFO
+使用同一个时钟信号来控制数据的读写，而异步 FIFO
+有两个时钟信号，一个用于读操作，另一个用于写操作。</p>
+<p>同步 FIFO 的作用一般是做一个数据缓冲，也就是一个 buffer。异步 FIFO
+有两个较为重要的作用：一个是实现数据在不同时钟域进行传递，另一个作用就是实现不同数据宽度的数据接口。</p>
+<h1 id="同步fifo的实现">2、同步FIFO的实现</h1>
+<p>FIFO
+的设计原则是任何时候都不能向满FIFO中写入数据（写溢出），任何时候都不能从空FIFO中读取数据（读溢出）。FIFO
+设计的核心是空满判断。FIFO 设置读，写地址指针，FIFO 初始化的时候
+读指针和写指针都指向地址为 0 的位置，当往 FIFO
+里面每写一个数据，写地址指针自动加 1 指向下一个要写入的地址。当从 FIFO
+里面每读一个数据，读地址指针自动加 1
+指向下一个要读出的地址，最后通过比较读地址指针和写地址指针的大小来确定空满状态。</p>
+<ul>
+<li><p>写指针：总是指向下一个将要被写入的单元，复位时，指向第 1
+个单元（编号为 0）。</p></li>
+<li><p>读指针：总是指向当前要被读出的数据，复位时，指向第 1
+个单元（编号为 0）。</p></li>
+</ul>
+<p>产生可靠的 FIFO 读写指针和生成 FIFO “空”/“满”状态标志是 FIFO
+设计的关键。</p>
+<p>当读写指针相等时，表明 FIFO
+为空，这种情况发生在复位操作时，或者当读指针读出 FIFO
+中最后一个数据后，追赶上了写指针时，如下图所示<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span
+class="hint--top hint--rounded"
+aria-label="[掰开揉碎讲 FIFO（同步FIFO和异步FIFO）](https://www.cnblogs.com/DoreenLiu/p/17348480.html)">[1]</span></a></sup>：</p>
 <figure>
-<img src="/img/HDLBits_one/image.png" srcset="/img/loading.gif" lazyload alt="Wire" />
-<figcaption aria-hidden="true">Wire</figcaption>
+<img src="/img/同步fifo/image.gif" srcset="/img/loading.gif" lazyload alt="读空" />
+<figcaption aria-hidden="true">读空</figcaption>
 </figure>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
-    <span class="token keyword">input</span> in<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> out
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Note that wires are directional, so "assign in = out" is not equivalent.</span>
-    <span class="token comment">// 注意 wire 是有方向的 因此 assign in = out 是不等价的</span>
-    <span class="token keyword">assign</span> out <span class="token operator">=</span> in<span class="token punctuation">;</span>
-
-<span class="token keyword">endmodule</span></code></pre></div></figure>
-<div class="note note-success">
-            <ul><li><p>wire 一般只有一个 source，即从某一点输出，但可以有多个sinks，即输入到多个点</p></li><li><p>assign语句映射到具体的硬件上，就是产生了信号的驱动，由右值驱动左值。</p></li></ul>
-          </div>
-<h2 id="problem-3-wire4">Problem 3 : Wire4</h2>
-<p>Create a module with 3 inputs and 4 outputs that behaves like wires
-that makes these connections:</p>
-<p>创建一个具有3个输入和4个输出的模块，要实现如下连接：</p>
-<p>a -&gt; w</p>
-<p>b -&gt; x</p>
-<p>b -&gt; y</p>
-<p>c -&gt; z</p>
+<p>当读写指针再次相等时，表明 FIFO
+为满，这种情况发生在写指针转了一圈，折回来又追上了读指针，如下图所示<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span
+class="hint--top hint--rounded"
+aria-label="[掰开揉碎讲 FIFO（同步FIFO和异步FIFO）](https://www.cnblogs.com/DoreenLiu/p/17348480.html)">[1]</span></a></sup>：</p>
 <figure>
-<img src="/img/HDLBits_one/image-1.png" srcset="/img/loading.gif" lazyload alt="Wire4" />
-<figcaption aria-hidden="true">Wire4</figcaption>
+<img src="/img/同步fifo/image-1.gif" srcset="/img/loading.gif" lazyload alt="写满" />
+<figcaption aria-hidden="true">写满</figcaption>
 </figure>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span>
-    <span class="token keyword">input</span> a<span class="token punctuation">,</span>
-    <span class="token keyword">input</span> b<span class="token punctuation">,</span>
-    <span class="token keyword">input</span> c<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> w<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> x<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> y<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> z
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 这里的顺序可以任意调换</span>
-    <span class="token keyword">assign</span> w <span class="token operator">=</span> a<span class="token punctuation">;</span>
-    <span class="token keyword">assign</span> x <span class="token operator">=</span> b<span class="token punctuation">;</span>
-    <span class="token keyword">assign</span> y <span class="token operator">=</span> b<span class="token punctuation">;</span>    <span class="token comment">// 注意这里 b 连接到两个输出</span>
-    <span class="token keyword">assign</span> z <span class="token operator">=</span> c<span class="token punctuation">;</span>
-    
-<span class="token keyword">endmodule</span></code></pre></div></figure>
-<div class="note note-success">
-            <ul><li><p>多个 assign语句的顺序并不重要，因为它们描述的是连接关系，而不是执行顺序。</p></li><li><p>输入输出端口声明会自动声明 wire类型（除非特别指定其他类型），模块端口声明 <code>input a</code> 等同于<code>input wire a</code> 。</p></li><li><p>assign语句不是创建新的导线，而是在已存在的导线之间建立连接</p></li></ul>
-          </div>
-<p>注意 b 连接到了两个输出（x 和
-y），这是允许的，因为一个输入信号可以驱动多个输出；虽然看起来有4条
-assign 语句，但我们实际上是在7个已经存在的导线之间建立连接。</p>
+<p>参考刀哥的思路，我们将有两种思路进行同步fifo的设计。<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span
+class="hint--top hint--rounded"
+aria-label="[同步FIFO的两种Verilog设计方法（计数器法、高位扩展法）](https://blog.csdn.net/wuzhikaidetb/article/details/121136040?ops_request_misc=%257B%2522request%255Fid%2522%253A%252227622c9b4e0ef88928f3ab4dfabed8fd%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=27622c9b4e0ef88928f3ab4dfabed8fd&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-121136040-null-null.nonecase&amp;utm_term=fifo&amp;spm=1018.2226.3001.4450)">[2]</span></a></sup></p>
+<h2 id="计数器法实现同步fifo">2.1、计数器法实现同步FIFO</h2>
+<p>构建一个计数器，该计数器(fifo_cnt)用于指示当前 FIFO
+中数据的个数：</p>
+<ul>
+<li><p>复位时，该计数器为 0，FIFO 中的数据个数为 0。</p></li>
+<li><p>当读写使能信号均有效时，说明又读又写，计数器不变，FIFO
+中的数据个数无变化。</p></li>
+<li><p>当写使能有效且 full = 0，则 fifo_cnt + 1；表示写操作且 FIFO
+未满时候，FIFO 中的数据增加了 1 。</p></li>
+<li><p>当读使能有效且 empty = 0，则 fifo_cnt - 1;表示读操作且 FIFO
+未空时候，FIFO 中的数据减少了 1 。</p></li>
+<li><p>fifo_cnt = 0 的时候，表示 FIFO 空，需要设置 empty = 1；fifo_cnt =
+fifo的深度 的时候，表示 FIFO 现在已经满，需要设置 full = 1。</p></li>
+</ul>
+<p>这种方法设计比较简单，但是需要的额外的计数器，就会产生额外的资源，而且当
+FIFO 比较大时，会降低 FIFO 最终可以达到的速度。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token comment">//读操作，更新读地址</span>
+<span class="token important">always @</span> <span class="token punctuation">(</span><span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>rst_n<span class="token punctuation">)</span>
+		rd_addr <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	<span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>empty <span class="token operator">&amp;&amp;</span> rd_en<span class="token punctuation">)</span><span class="token keyword">begin</span>
+		rd_addr <span class="token operator">&lt;=</span> rd_addr <span class="token operator">+</span> <span class="token number">1'd1</span><span class="token punctuation">;</span>
+		data_out <span class="token operator">&lt;=</span> fifo_buffer<span class="token punctuation">[</span>rd_addr<span class="token punctuation">]</span><span class="token punctuation">;</span>
+	<span class="token keyword">end</span>
+<span class="token keyword">end</span>
+<span class="token comment">//写操作,更新写地址</span>
+<span class="token important">always @</span> <span class="token punctuation">(</span><span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>rst_n<span class="token punctuation">)</span>
+		wr_addr <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	<span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>full <span class="token operator">&amp;&amp;</span> wr_en<span class="token punctuation">)</span><span class="token keyword">begin</span>
+		wr_addr <span class="token operator">&lt;=</span> wr_addr <span class="token operator">+</span> <span class="token number">1'd1</span><span class="token punctuation">;</span>
+		fifo_buffer<span class="token punctuation">[</span>wr_addr<span class="token punctuation">]</span><span class="token operator">&lt;=</span>data_in<span class="token punctuation">;</span>
+	<span class="token keyword">end</span>
+<span class="token keyword">end</span>
+<span class="token comment">//更新计数器</span>
+<span class="token important">always @</span> <span class="token punctuation">(</span><span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>rst_n<span class="token punctuation">)</span>
+		fifo_cnt <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+	<span class="token keyword">else</span> <span class="token keyword">begin</span>
+		<span class="token function">case</span><span class="token punctuation">(</span><span class="token operator">&#123;</span>wr_en<span class="token punctuation">,</span>rd_en<span class="token operator">&#125;</span><span class="token punctuation">)</span>
+			<span class="token number">2'b00</span><span class="token punctuation">:</span>fifo_cnt <span class="token operator">&lt;=</span> fifo_cnt<span class="token punctuation">;</span>						<span class="token comment">//不读不写</span>
+			<span class="token number">2'b01</span><span class="token punctuation">:</span>	                               			<span class="token comment">//仅仅读</span>
+				<span class="token function">if</span><span class="token punctuation">(</span>fifo_cnt <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+					fifo_cnt <span class="token operator">&lt;=</span> fifo_cnt <span class="token operator">-</span> <span class="token number">1'b1</span><span class="token punctuation">;</span> 
+			<span class="token number">2'b10</span><span class="token punctuation">:</span>                                 			<span class="token comment">//仅仅写</span>
+				<span class="token function">if</span><span class="token punctuation">(</span>fifo_cnt <span class="token operator">!=</span> DATA_DEPTH<span class="token punctuation">)</span>
+					fifo_cnt <span class="token operator">&lt;=</span> fifo_cnt <span class="token operator">+</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>   
+			<span class="token number">2'b11</span><span class="token punctuation">:</span>fifo_cnt <span class="token operator">&lt;=</span> fifo_cnt<span class="token punctuation">;</span>	           			<span class="token comment">//读写同时</span>
+			<span class="token keyword">default</span><span class="token punctuation">:</span><span class="token punctuation">;</span>                              	
+		<span class="token keyword">endcase</span>
+	<span class="token keyword">end</span>
+<span class="token keyword">end</span>
+<span class="token comment">//依据计数器状态更新指示信号</span>
+<span class="token keyword">assign</span> full  <span class="token operator">=</span> <span class="token punctuation">(</span>fifo_cnt <span class="token operator">==</span> DATA_DEPTH<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1'b1</span> <span class="token punctuation">:</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>		<span class="token comment">//满信号</span>
+<span class="token keyword">assign</span> empty <span class="token operator">=</span> <span class="token punctuation">(</span>fifo_cnt <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">?</span> <span class="token number">1'b1</span> <span class="token punctuation">:</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>				<span class="token comment">//空信号</span></code></pre></div></figure>
+<p>仿真依次进行以下测试：基本单次读写测试、FIFO写满测试、FIFO读空测试、同时读写操作测试、边界条件测试</p>
+<figure>
+<img src="/img/同步fifo/image.png" srcset="/img/loading.gif" lazyload alt="计数器法-同步FIFO-仿真" />
+<figcaption aria-hidden="true">计数器法-同步FIFO-仿真</figcaption>
+</figure>
+<h2 id="高位扩展法实现同步fifo">2.2、高位扩展法实现同步FIFO</h2>
+<p>高位扩展法是一种更加高效的FIFO实现方式。它通过在读写指针上增加一个额外的高位作为指示位，避免使用独立的计数器。其原理如下：</p>
+<ul>
+<li><p>读写指针的宽度要比FIFO深度所需的地址位宽多1位</p></li>
+<li><p>指针的低位用于寻址，高位用于判断FIFO的空满状态</p></li>
+<li><p>当写指针与读指针相比，最高位不同而其他位相同时，说明写入数据已经超过一轮，此时FIFO已满。</p></li>
+<li><p>当写指针与读指针的最高位和其他位都相同时，说明读指针已经追上写指针位置，此时FIFO为空。</p></li>
+</ul>
+<p>高位扩展法要求FIFO深度为2的N次幂，以确保地址自然溢出和空满条件正确性。若深度非2的N次幂，需引入复杂的手动控制逻辑，失去高位扩展法的简洁性和高效性。</p>
+<p>高位扩展法取消了计数器，在原来的基础上更改了读写指针的更新逻辑，通过比较读写指针的高位和低位来判断FIFO的空满状态。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token comment">//当所有位相等时，读指针追到到了写指针，FIFO被读空</span>
+<span class="token keyword">assign</span>	empty <span class="token operator">=</span> <span class="token punctuation">(</span> wr_ptr <span class="token operator">==</span> rd_ptr <span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1'b1</span> <span class="token punctuation">:</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+<span class="token comment">//当最高位不同但是其他位相等时，写指针超过读指针一圈，FIFO被写满</span>
+<span class="token keyword">assign</span>	full  <span class="token operator">=</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>wr_ptr_msb <span class="token operator">!=</span> rd_ptr_msb <span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span> wr_ptr_true <span class="token operator">==</span> rd_ptr_true <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token operator">?</span> <span class="token number">1'b1</span> <span class="token punctuation">:</span> <span class="token number">1'b0</span><span class="token punctuation">;</span></code></pre></div></figure>
+<p>同样进行仿真测试：基本单次读写测试、FIFO写满测试、FIFO读空测试、同时读写操作测试、边界条件测试</p>
+<figure>
+<img src="/img/同步fifo/image1.png" srcset="/img/loading.gif" lazyload alt="高位扩展法-同步FIFO-仿真" />
+<figcaption aria-hidden="true">高位扩展法-同步FIFO-仿真</figcaption>
+</figure>
+<h1 id="参考资料">3、参考资料</h1>
+<section class="footnotes">
+<div class="footnote-list">
+<ol>
+<li>
+<span id="fn:1" class="footnote-text"><span><a
+target="_blank" rel="noopener" href="https://www.cnblogs.com/DoreenLiu/p/17348480.html">掰开揉碎讲
+FIFO（同步FIFO和异步FIFO）</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref">
+↩︎</a></span></span>
+</li>
+<li>
+<span id="fn:2" class="footnote-text"><span><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/wuzhikaidetb/article/details/121136040?ops_request_misc=%257B%2522request%255Fid%2522%253A%252227622c9b4e0ef88928f3ab4dfabed8fd%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&amp;request_id=27622c9b4e0ef88928f3ab4dfabed8fd&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-121136040-null-null.nonecase&amp;utm_term=fifo&amp;spm=1018.2226.3001.4450">同步FIFO的两种Verilog设计方法（计数器法、高位扩展法）</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref">
+↩︎</a></span></span>
+</li>
+</ol>
+</div>
+</section>
 
                 
               </div>
@@ -421,7 +482,7 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
     
       <span class="category-chain">
         
-  <a href="/categories/HDLBits%E5%88%B7%E9%A2%98/" class="category-chain-item">HDLBits刷题</a>
+  <a href="/categories/FPGA%E5%9F%BA%E7%A1%80/" class="category-chain-item">FPGA基础</a>
   
   
 
@@ -436,11 +497,11 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
+        <a href="/tags/FIFO/" class="print-no-link">#FIFO</a>
+      
         <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
       
-        <a href="/tags/HDLBits/" class="print-no-link">#HDLBits</a>
-      
-        <a href="/tags/%E5%88%B7%E9%A2%98/" class="print-no-link">#刷题</a>
+        <a href="/tags/Verilog/" class="print-no-link">#Verilog</a>
       
     </div>
   
@@ -452,8 +513,8 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>HDLBits刷题日记（一）</div>
-      <div>https://yao-jiangyu.github.io/HDLBits_one/</div>
+      <div>同步FIFO详解</div>
+      <div>https://yao-jiangyu.github.io/FIFO/</div>
     </div>
     <div class="license-meta">
       
@@ -465,7 +526,7 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月16日</div>
+          <div>2025年3月5日</div>
         </div>
       
       
@@ -509,18 +570,12 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/HDLBits_two/" title="HDLBits刷题日记（二）">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">HDLBits刷题日记（二）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/spi-introduction/" title="三大低速总线之SPI详解">
-                        <span class="hidden-mobile">三大低速总线之SPI详解</span>
+                      <a href="/HDLBits_three/" title="HDLBits刷题日记（三）">
+                        <span class="hidden-mobile">HDLBits刷题日记（三）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
