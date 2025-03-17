@@ -19,27 +19,25 @@
   <meta name="author" content="小姚">
   <meta name="keywords" content="">
   
-    <meta name="description" content="打算利用碎片化时间重温一遍Verilog语法，好记性不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Getting Started Problem 0 : Step one Build a circuit with no inputs and one output. That output shoul">
+    <meta name="description" content="在日常学习中，常常碰到一些巧妙的设计思路，好记性不如烂笔头，在此记录，方便后续自己的查阅复习，如果能帮助到其他同学那就更好了。活到老学到老，FPGA设计技巧系列将持续更新，内容如有不妥之处，欢迎评论区指正，共同学习进步。            1、位操作替代取模运算 在数字电路设计中，当模数为2的幂时（如\(64&#x3D;2^6\)），可以用位操作替代取模运算。  二进">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HDLBits刷题日记（一）">
-<meta property="og:url" content="https://yao-jiangyu.github.io/HDLBits_one/index.html">
+<meta property="og:title" content="位操作替代取模运算">
+<meta property="og:url" content="https://yao-jiangyu.github.io/%E4%BD%8D%E6%93%8D%E4%BD%9C%E6%9B%BF%E4%BB%A3%E5%8F%96%E6%A8%A1%E8%BF%90%E7%AE%97/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="打算利用碎片化时间重温一遍Verilog语法，好记性不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Getting Started Problem 0 : Step one Build a circuit with no inputs and one output. That output shoul">
+<meta property="og:description" content="在日常学习中，常常碰到一些巧妙的设计思路，好记性不如烂笔头，在此记录，方便后续自己的查阅复习，如果能帮助到其他同学那就更好了。活到老学到老，FPGA设计技巧系列将持续更新，内容如有不妥之处，欢迎评论区指正，共同学习进步。            1、位操作替代取模运算 在数字电路设计中，当模数为2的幂时（如\(64&#x3D;2^6\)），可以用位操作替代取模运算。  二进">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_one/image.png">
-<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_one/image-1.png">
-<meta property="article:published_time" content="2025-02-16T02:00:00.000Z">
-<meta property="article:modified_time" content="2025-03-17T12:39:26.987Z">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/%E4%BD%8D%E6%93%8D%E4%BD%9C%E6%9B%BF%E4%BB%A3%E5%8F%96%E6%A8%A1%E8%BF%90%E7%AE%97/1742214787466.png">
+<meta property="article:published_time" content="2025-03-17T12:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-17T12:49:31.966Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="FPGA">
-<meta property="article:tag" content="HDLBits">
-<meta property="article:tag" content="刷题">
+<meta property="article:tag" content="Verilog">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/HDLBits_one/image.png">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/%E4%BD%8D%E6%93%8D%E4%BD%9C%E6%9B%BF%E4%BB%A3%E5%8F%96%E6%A8%A1%E8%BF%90%E7%AE%97/1742214787466.png">
   
   
   
-  <title>HDLBits刷题日记（一） - Hexo</title>
+  <title>位操作替代取模运算 - Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -230,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="HDLBits刷题日记（一）"></span>
+            <span id="subtitle" data-typed-text="位操作替代取模运算"></span>
           
         </div>
 
@@ -241,8 +239,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-16 10:00" pubdate>
-          2025年2月16日 上午
+        <time datetime="2025-03-17 20:00" pubdate>
+          2025年3月17日 晚上
         </time>
       </span>
     
@@ -253,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          840 字
+          591 字
         
       </span>
     
@@ -264,7 +262,7 @@
         
         
         
-          8 分钟
+          5 分钟
         
       </span>
     
@@ -310,99 +308,134 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">HDLBits刷题日记（一）</h1>
+            <h1 id="seo-header">位操作替代取模运算</h1>
             
             
               <div class="markdown-body">
                 
                 <div class="note note-primary">
-            <p>打算利用碎片化时间重温一遍Verilog语法，好记性不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。</p>
+            <p>在日常学习中，常常碰到一些巧妙的设计思路，好记性不如烂笔头，在此记录，方便后续自己的查阅复习，如果能帮助到其他同学那就更好了。活到老学到老，FPGA设计技巧系列将持续更新，内容如有不妥之处，欢迎评论区指正，共同学习进步。</p>
           </div>
-<h1 id="getting-started">1、Getting Started</h1>
-<h2 id="problem-0-step-one">Problem 0 : Step one</h2>
-<p>Build a circuit with no inputs and one output. That output should
-always drive 1 (or logic high).</p>
-<p>构建一个电路，没有输入端口，只有一个输出端口，输出端口时钟驱动逻辑 1
-，即逻辑高电平。</p>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
-    <span class="token keyword">output</span> one
+<h1 id="位操作替代取模运算">1、位操作替代取模运算</h1>
+<p>在数字电路设计中，当模数为2的幂时（如<span
+class="math inline">\(64=2^6\)</span>），可以<strong>用位操作替代取模运算。</strong></p>
+<ul>
+<li><p>二进制特性：$ N = 2^n $ 的二进制形式为 1 后跟 <span
+class="math inline">\(n\)</span> 个 0（如 64 = 1000000）</p></li>
+<li><p><span class="math inline">\(N-1\)</span> 的二进制：<span
+class="math inline">\(N-1\)</span> 的二进制为 <span
+class="math inline">\(n\)</span> 个 1（如 63 = 0111111）</p></li>
+<li><p>位操作效果：<span class="math inline">\(x\)</span> &amp; <span
+class="math inline">\((N-1)\)</span> 会直接保留 <span
+class="math inline">\(x\)</span> 的低 <span
+class="math inline">\(n\)</span> 位（等效于取模）</p></li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token comment">// 假设 base_addr + data_cnt = 127 (01111111₂)</span>
+<span class="token keyword">assign</span> rd_addr_mod <span class="token operator">=</span> <span class="token number">127</span> <span class="token operator">%</span> <span class="token number">64</span><span class="token punctuation">;</span>    <span class="token comment">// 结果 = 63 (0111111₂)</span>
+<span class="token keyword">assign</span> rd_addr_and <span class="token operator">=</span> <span class="token number">127</span> <span class="token operator">&amp;</span> <span class="token number">63</span><span class="token punctuation">;</span>    <span class="token comment">// 结果 = 63 (0111111₂)</span>
+
+<span class="token comment">// 假设 base_addr + data_cnt = 65 (01000001₂)</span>
+<span class="token keyword">assign</span> rd_addr_mod <span class="token operator">=</span> <span class="token number">65</span> <span class="token operator">%</span> <span class="token number">64</span><span class="token punctuation">;</span>     <span class="token comment">// 结果 = 1 (0000001₂)</span>
+<span class="token keyword">assign</span> rd_addr_and <span class="token operator">=</span> <span class="token number">65</span> <span class="token operator">&amp;</span> <span class="token number">63</span><span class="token punctuation">;</span>     <span class="token comment">// 结果 = 1 (0000001₂)</span></code></pre></div></figure>
+<p>当然，我们也可以简单仿真验证一下：</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">mod_2_n</span><span class="token punctuation">(</span>
+    <span class="token keyword">input</span> clk<span class="token punctuation">,</span>
+    <span class="token keyword">input</span> rst_n<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> MyFlag
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">assign</span> one <span class="token operator">=</span> <span class="token number">1'b1</span><span class="token punctuation">;</span>
+
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> data_cnt<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> rd_addr<span class="token punctuation">;</span>
+<span class="token keyword">reg</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> wr_addr<span class="token punctuation">;</span>
+
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">~</span>rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        data_cnt <span class="token operator">&lt;=</span> <span class="token number">6'd0</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">else</span> <span class="token keyword">begin</span>
+        data_cnt <span class="token operator">&lt;=</span> data_cnt <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">end</span>
+
+<span class="token important">always @</span><span class="token punctuation">(</span><span class="token keyword">posedge</span> clk <span class="token keyword">or</span> <span class="token keyword">negedge</span> rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">~</span>rst_n<span class="token punctuation">)</span> <span class="token keyword">begin</span>
+        rd_addr <span class="token operator">&lt;=</span>  <span class="token number">6'd0</span><span class="token punctuation">;</span>
+        wr_addr <span class="token operator">&lt;=</span>  <span class="token number">6'd0</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span> <span class="token keyword">else</span> <span class="token keyword">begin</span>
+        rd_addr <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">48</span> <span class="token operator">+</span> data_cnt<span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">64</span><span class="token punctuation">;</span>
+        wr_addr <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">48</span> <span class="token operator">+</span> data_cnt<span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">6'h3F</span><span class="token punctuation">;</span> <span class="token comment">// 与63(111111)进行位与操作</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">end</span>
+
+<span class="token keyword">assign</span> MyFlag <span class="token operator">=</span> wr_addr <span class="token operator">==</span> rd_addr<span class="token punctuation">;</span>
 
 <span class="token keyword">endmodule</span></code></pre></div></figure>
-<div class="note note-success">
-            <p>1 在数字逻辑中代表 logic high，而 0 代表 logic low。</p>
-          </div>
-<h2 id="problem-1-zero">Problem 1 : Zero</h2>
-<p>Build a circuit with no inputs and one output that outputs a constant
-0.</p>
-<p>构建一个电路，没有输入端口，只有一个输出端口，但这次输出端口时钟驱动逻辑
-0 ，即逻辑低电平。</p>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
-    <span class="token keyword">output</span> zero
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Module body starts after semicolon</span>
-    <span class="token keyword">assign</span> zero <span class="token operator">=</span> <span class="token number">1'b0</span><span class="token punctuation">;</span>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token constant">`timescale</span> <span class="token number">1</span>ns<span class="token operator">/</span><span class="token number">1</span>ps
 
-<span class="token keyword">endmodule</span></code></pre></div></figure>
-<h1 id="verilog-language---basics">2、Verilog Language - Basics</h1>
-<h2 id="problem-2-wire">Problem 2 : Wire</h2>
-<p>Create a module with one input and one output that behaves like a
-wire.</p>
-<p>创建一个具有一个输入和一个输出的模块，其行为类似于导线（wire）。</p>
-<p>不同于物理导线，Verilog中的导线（和其他信号）是有<strong>方向性</strong>的。这意味着信息只能从源（source）单向流向接收端（sink）（源通常也被称为驱动器，用于向导线驱动一个值）。在Verilog的"连续赋值"语句中（<code>assign left_side = right_side;</code>），右侧信号的值被驱动到左侧的导线上。这种赋值被称为"连续的"，是因为即使右侧的值发生变化，赋值也会持续进行。连续赋值不是一次性的事件。</p>
-<p>模块的端口也具有方向性（通常是输入或输出）。输入端口由模块外部的元件驱动，而输出端口则驱动模块外部的元件。从模块内部来看，输入端口是一个驱动器或源，而输出端口是一个接收端。</p>
-<p>下图说明了电路的每个部分如何对应Verilog代码的每个位。模块和端口声明创建了电路的黑色部分。我们的任务是通过添加一个<code>assign</code>语句来创建一条导线（绿色部分），将输入(<code>in</code>)连接到输出(<code>out</code>)。模块外部的部分不是我们需要关心的，但应该知道，我们设计的电路将通过官方的测试工具连接到<code>top_module</code>的端口来进行测试。</p>
-<figure>
-<img src="/img/HDLBits_one/image.png" srcset="/img/loading.gif" lazyload alt="Wire" />
-<figcaption aria-hidden="true">Wire</figcaption>
-</figure>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
-    <span class="token keyword">input</span> in<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> out
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Note that wires are directional, so "assign in = out" is not equivalent.</span>
-    <span class="token comment">// 注意 wire 是有方向的 因此 assign in = out 是不等价的</span>
-    <span class="token keyword">assign</span> out <span class="token operator">=</span> in<span class="token punctuation">;</span>
-
-<span class="token keyword">endmodule</span></code></pre></div></figure>
-<div class="note note-success">
-            <ul><li><p>wire 一般只有一个 source，即从某一点输出，但可以有多个sinks，即输入到多个点</p></li><li><p>assign语句映射到具体的硬件上，就是产生了信号的驱动，由右值驱动左值。</p></li></ul>
-          </div>
-<h2 id="problem-3-wire4">Problem 3 : Wire4</h2>
-<p>Create a module with 3 inputs and 4 outputs that behaves like wires
-that makes these connections:</p>
-<p>创建一个具有3个输入和4个输出的模块，要实现如下连接：</p>
-<p>a -&gt; w</p>
-<p>b -&gt; x</p>
-<p>b -&gt; y</p>
-<p>c -&gt; z</p>
-<figure>
-<img src="/img/HDLBits_one/image-1.png" srcset="/img/loading.gif" lazyload alt="Wire4" />
-<figcaption aria-hidden="true">Wire4</figcaption>
-</figure>
-<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span>
-    <span class="token keyword">input</span> a<span class="token punctuation">,</span>
-    <span class="token keyword">input</span> b<span class="token punctuation">,</span>
-    <span class="token keyword">input</span> c<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> w<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> x<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> y<span class="token punctuation">,</span>
-    <span class="token keyword">output</span> z
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 这里的顺序可以任意调换</span>
-    <span class="token keyword">assign</span> w <span class="token operator">=</span> a<span class="token punctuation">;</span>
-    <span class="token keyword">assign</span> x <span class="token operator">=</span> b<span class="token punctuation">;</span>
-    <span class="token keyword">assign</span> y <span class="token operator">=</span> b<span class="token punctuation">;</span>    <span class="token comment">// 注意这里 b 连接到两个输出</span>
-    <span class="token keyword">assign</span> z <span class="token operator">=</span> c<span class="token punctuation">;</span>
+<span class="token keyword">module</span> <span class="token function">tb_mod_2_n</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 定义测试信号</span>
+    <span class="token keyword">reg</span> clk<span class="token punctuation">;</span>
+    <span class="token keyword">reg</span> rst_n<span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> MyFlag<span class="token punctuation">;</span>
+    
+    <span class="token comment">// 实例化被测模块</span>
+    mod_2_n dut <span class="token punctuation">(</span>
+        <span class="token punctuation">.</span><span class="token function">clk</span><span class="token punctuation">(</span>clk<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">.</span><span class="token function">rst_n</span><span class="token punctuation">(</span>rst_n<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">.</span><span class="token function">MyFlag</span><span class="token punctuation">(</span>MyFlag<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment">// 时钟生成</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        clk <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">forever</span> <span class="token number">#5</span> clk <span class="token operator">=</span> <span class="token operator">~</span>clk<span class="token punctuation">;</span> <span class="token comment">// 10ns周期（100MHz）时钟</span>
+    <span class="token keyword">end</span>
+    
+    <span class="token comment">// 测试过程</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        <span class="token comment">// 波形输出</span>
+        <span class="token kernel-function property">$dumpfile</span><span class="token punctuation">(</span><span class="token string">"tb_mod_2_n.vcd"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token kernel-function property">$dumpvars</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> tb_mod_2_n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 初始复位</span>
+        rst_n <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token number">#20</span><span class="token punctuation">;</span>
+        rst_n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 运行足够长的时间以观察多个周期</span>
+        <span class="token number">#1500</span><span class="token punctuation">;</span> <span class="token comment">// 运行150个时钟周期，足以观察64个计数和环绕</span>
+        
+        <span class="token comment">// 再次复位测试</span>
+        rst_n <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token number">#20</span><span class="token punctuation">;</span>
+        rst_n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token number">#680</span><span class="token punctuation">;</span>
+        
+        <span class="token kernel-function property">$display</span><span class="token punctuation">(</span><span class="token string">"测试完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token kernel-function property">$finish</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+    
+    <span class="token comment">// 监控信号</span>
+    <span class="token keyword">initial</span> <span class="token keyword">begin</span>
+        <span class="token kernel-function property">$monitor</span><span class="token punctuation">(</span><span class="token string">"Time=%0t, rst_n=%b, wr_addr=%d, rd_addr=%d, MyFlag=%b"</span><span class="token punctuation">,</span> 
+                 <span class="token kernel-function property">$time</span><span class="token punctuation">,</span> rst_n<span class="token punctuation">,</span> dut<span class="token punctuation">.</span>wr_addr<span class="token punctuation">,</span> dut<span class="token punctuation">.</span>rd_addr<span class="token punctuation">,</span> MyFlag<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
     
 <span class="token keyword">endmodule</span></code></pre></div></figure>
-<div class="note note-success">
-            <ul><li><p>多个 assign语句的顺序并不重要，因为它们描述的是连接关系，而不是执行顺序。</p></li><li><p>输入输出端口声明会自动声明 wire类型（除非特别指定其他类型），模块端口声明 <code>input a</code> 等同于<code>input wire a</code> 。</p></li><li><p>assign语句不是创建新的导线，而是在已存在的导线之间建立连接</p></li></ul>
-          </div>
-<p>注意 b 连接到了两个输出（x 和
-y），这是允许的，因为一个输入信号可以驱动多个输出；虽然看起来有4条
-assign 语句，但我们实际上是在7个已经存在的导线之间建立连接。</p>
+<p>仿真结果如下图所示，我们可以看到 <code>wr_addr</code> 和
+<code>rd_addr</code> 的值始终相等，即 <code>MyFlag</code> 信号始终为
+1。</p>
+<figure>
+<img src="/img/位操作替代取模运算/1742214787466.png" srcset="/img/loading.gif" lazyload alt="仿真结果" />
+<figcaption aria-hidden="true">仿真结果</figcaption>
+</figure>
+<h1 id="注意事项">2、注意事项</h1>
+<ul>
+<li><p>位操作替代取模运算的前提是模数为2的幂，否则无法使用该方法。</p></li>
+<li><p>操作数为无符号数：有符号数的位操作会保留符号位，导致错误。</p></li>
+</ul>
+<h1 id="代码下载">3、代码下载</h1>
+<p>博客中涉及到的代码均在我的<a
+target="_blank" rel="noopener" href="https://github.com/yao-jiangyu/MyBlogCode">GitHub仓库</a>中，欢迎大家下载学习。</p>
 
                 
               </div>
@@ -421,7 +454,7 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
     
       <span class="category-chain">
         
-  <a href="/categories/HDLBits%E5%88%B7%E9%A2%98/" class="category-chain-item">HDLBits刷题</a>
+  <a href="/categories/FPGA%E8%AE%BE%E8%AE%A1%E6%8A%80%E5%B7%A7/" class="category-chain-item">FPGA设计技巧</a>
   
   
 
@@ -438,9 +471,7 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
       
         <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
       
-        <a href="/tags/HDLBits/" class="print-no-link">#HDLBits</a>
-      
-        <a href="/tags/%E5%88%B7%E9%A2%98/" class="print-no-link">#刷题</a>
+        <a href="/tags/Verilog/" class="print-no-link">#Verilog</a>
       
     </div>
   
@@ -452,8 +483,8 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>HDLBits刷题日记（一）</div>
-      <div>https://yao-jiangyu.github.io/HDLBits_one/</div>
+      <div>位操作替代取模运算</div>
+      <div>https://yao-jiangyu.github.io/位操作替代取模运算/</div>
     </div>
     <div class="license-meta">
       
@@ -465,7 +496,7 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月16日</div>
+          <div>2025年3月17日</div>
         </div>
       
       
@@ -509,18 +540,12 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/HDLBits_two/" title="HDLBits刷题日记（二）">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">HDLBits刷题日记（二）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/spi-introduction/" title="三大低速总线之SPI详解">
-                        <span class="hidden-mobile">三大低速总线之SPI详解</span>
+                      <a href="/async_fifo/" title="异步FIFO详解">
+                        <span class="hidden-mobile">异步FIFO详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -609,6 +634,12 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -855,6 +886,49 @@ assign 语句，但我们实际上是在7个已经存在的导线之间建立连
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script defer src="/js/leancloud.js" ></script>
 
