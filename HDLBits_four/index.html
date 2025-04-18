@@ -1,0 +1,964 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpg">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="小姚">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Verilog Language - Vectors Problem 15 : Vector concatenation operator 片选操作符用于选择向量的一部分比特。而连接操作符 { a,b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDLBits刷题日记（四）">
+<meta property="og:url" content="https://yao-jiangyu.github.io/HDLBits_four/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Verilog Language - Vectors Problem 15 : Vector concatenation operator 片选操作符用于选择向量的一部分比特。而连接操作符 { a,b">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_four/Vector3.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_four/Vector5.png">
+<meta property="article:published_time" content="2025-02-22T00:53:00.000Z">
+<meta property="article:modified_time" content="2025-04-18T01:55:34.503Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FPGA">
+<meta property="article:tag" content="HDLBits">
+<meta property="article:tag" content="刷题">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/HDLBits_four/Vector3.png">
+  
+  
+  
+  <title>HDLBits刷题日记（四） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yao-jiangyu.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"jMO2SnEaE8xWJhRaZT0vd3UP-MdYXbMMI","app_key":"SNQjh7z4sNwgP0MEGn5mGmx6","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaojiangyu&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/myfirst.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HDLBits刷题日记（四）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-22 08:53" pubdate>
+          2025年2月22日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HDLBits刷题日记（四）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div class="note note-primary">
+            <p>打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。</p>
+          </div>
+<h1 id="verilog-language---vectors">1、Verilog Language - Vectors</h1>
+<h2 id="problem-15-vector-concatenation-operator">Problem 15 : Vector
+concatenation operator</h2>
+<p>片选操作符用于选择向量的一部分比特。而连接操作符 { a,b,c
+}，将较小的向量连接在一起，用于创建更大的向量。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token operator">&#123;</span><span class="token number">3'b111</span><span class="token punctuation">,</span> <span class="token number">3'b000</span><span class="token operator">&#125;</span> <span class="token operator">=></span> <span class="token number">6'b111000</span>
+<span class="token operator">&#123;</span><span class="token number">1'b1</span><span class="token punctuation">,</span> <span class="token number">1'b0</span><span class="token punctuation">,</span> <span class="token number">3'b101</span><span class="token operator">&#125;</span> <span class="token operator">=></span> <span class="token number">5'b10101</span>
+<span class="token operator">&#123;</span><span class="token number">4'ha</span><span class="token punctuation">,</span> <span class="token number">4'd10</span><span class="token operator">&#125;</span> <span class="token operator">=></span> <span class="token number">8'b10101010</span>     <span class="token comment">// 4'ha and 4'd10 are both 4'b1010 in binary</span></code></pre></div></figure>
+<p>连接操作符的基本语法使用 { } 将较小的向量括起来，每个 { }
+内的向量使用逗号作为间隔。</p>
+<p>连接运算符中的向量务必需要标注位宽，不然综合器怎么能知道你的结果需要多宽的位宽。因此
+{ 1,2,3 } 这样的操作是非法的，并会产生一个 Error：unsized constants are
+not allowed in concatenations.</p>
+<p>连接运算符可用于赋值的左侧和右侧。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">;</span>
+<span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">23</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out<span class="token punctuation">;</span>
+<span class="token keyword">assign</span> <span class="token operator">&#123;</span>out<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> out<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token operator">&#125;</span> <span class="token operator">=</span> in<span class="token punctuation">;</span>         <span class="token comment">// Swap two bytes. Right side and left side are both 16-bit vectors.</span>
+<span class="token keyword">assign</span> out<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">&#123;</span>in<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> in<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token operator">&#125;</span><span class="token punctuation">;</span>    <span class="token comment">// This is the same thing.</span>
+<span class="token keyword">assign</span> out <span class="token operator">=</span> <span class="token operator">&#123;</span>in<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> in<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token operator">&#125;</span><span class="token punctuation">;</span>       <span class="token comment">// This is different. The 16-bit vector on the right is extended to</span>
+                                        <span class="token comment">// match the 24-bit vector on the left, so out[23:16] are zero.</span>
+                                        <span class="token comment">// In the first two examples, out[23:16] are not assigned.</span>
+
+<span class="token keyword">assign</span> <span class="token operator">&#123;</span>cout<span class="token punctuation">,</span>sum<span class="token operator">&#125;</span> <span class="token operator">=</span> a <span class="token operator">+</span> b <span class="token operator">+</span> cin<span class="token punctuation">;</span>
+<span class="token comment">// 在表示全加器时，可以使用一句 assign 语句实现结果和进位的赋值。</span></code></pre></div></figure>
+<p>Given several input vectors, concatenate them together then split
+them up into several output vectors. There are six 5-bit input vectors:
+a, b, c, d, e, and f, for a total of 30 bits of input. There are four
+8-bit output vectors: w, x, y, and z, for 32 bits of output. The output
+should be a concatenation of the input vectors followed by two 1
+bits:</p>
+<p>给定几个输入向量，将它们连接在一起，然后将它们分成几个输出向量。有六个
+5 位输入向量：a、b、c、d、e 和 f，总共有 30 位输入。有四个 8
+位输出向量：w、x、y 和 z，总共有 32
+位输出。输出应该是输入向量的连接，后面跟着两个 1 位：</p>
+<figure>
+<img src="/img/HDLBits_four/Vector3.png" srcset="/img/loading.gif" lazyload
+alt="Vector concatenation operator" />
+<figcaption aria-hidden="true">Vector concatenation
+operator</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span>
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> f<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> w<span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> z <span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//</span>
+
+    <span class="token comment">// assign &#123; ... &#125; = &#123; ... &#125;;</span>
+    
+    <span class="token comment">// assign w = &#123;a,b[4:2]&#125;;</span>
+    <span class="token comment">// assign x = &#123;b[1:0],c,d[4]&#125;;</span>
+    <span class="token comment">// assign y = &#123;d[3:0],e[4:1]&#125;;</span>
+    <span class="token comment">// assign z = &#123;e[0],f,2'b11&#125;;</span>
+
+    <span class="token keyword">assign</span> <span class="token operator">&#123;</span>w<span class="token punctuation">,</span>x<span class="token punctuation">,</span>y<span class="token punctuation">,</span>z<span class="token operator">&#125;</span> <span class="token operator">=</span> <span class="token operator">&#123;</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token punctuation">,</span>d<span class="token punctuation">,</span>e<span class="token punctuation">,</span>f<span class="token punctuation">,</span><span class="token number">2'b11</span><span class="token operator">&#125;</span><span class="token punctuation">;</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-16-vector-reversal-1">Problem 16 : Vector reversal
+1</h2>
+<p>Given an 8-bit input vector [7:0], reverse its bit ordering.</p>
+<p>给定一个 8 位输入向量 [7:0]，反转其位序。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out <span class="token operator">=</span> <span class="token operator">&#123;</span>in<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">,</span>in<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span><span class="token operator">&#125;</span><span class="token punctuation">;</span>
+    <span class="token comment">// assign &#123;out[0],out[1],out[2],out[3],out[4],out[5],out[6],out[7]&#125; = in;</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<p>假设输入为超级超级长的向量，比如 2048 bit
+这种，此时不在合适使用上面的方式了。</p>
+<p>此时可以使用一个 for 循环或者使用 generate 语句来实现。</p>
+<ul>
+<li>for 循环</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">integer</span> i<span class="token punctuation">;</span>
+    <span class="token important">always @</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">begin</span>
+         <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">8</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>    <span class="token comment">//Use integer for pure Verilog.</span>
+             out<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">8</span><span class="token operator">-</span>i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<p>我们可以在创建一个组合逻辑 always
+块，在块中的组合逻辑将会按照一定的顺序运行。for
+循环描述了电路的行为，而不是电路的结构，因此，for 循环必须置于比如
+always 块这样的过程块中。（描述电路行为）</p>
+<p>for
+循环中的“循环”指的是代码层面的循环，其实，电路是不存在循环这种的东西的，无论是信号而是门电路，都不存在循环一说。实际上，for
+循环表示的代码将被综合器解析，for
+循环将被分别解析为硬件电路。（不过在仿真中，确实按照循环处理）。</p>
+<p>所以 for
+循环可以理解为代码循环的语法，减少编码量，但真正的硬件电路不存在循环。</p>
+<p>Verilog 的语法需要提前定义 integer 变量，即整形。</p>
+<ul>
+<li>generate 语句</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">genvar</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">generate</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">8</span><span class="token punctuation">;</span> i<span class="token operator">=</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">begin</span><span class="token punctuation">:</span> gen_name
+            <span class="token keyword">assign</span> out<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> in<span class="token punctuation">[</span><span class="token number">7</span><span class="token operator">-</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">end</span>
+    <span class="token keyword">endgenerate</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<p>虽然在 generate ，endgenerate 之间使用的仍然是 for
+循环，但生成块的概念和上面的 for 循环完全不同。</p>
+<p>生成块可以例化 assign 语句，模块，信号和变量的声明以及 always initial
+这样的过程块。循环生成块是生成块中的一种类型，在综合过程中同样被综合器进行编译，这个过程可以看做综合过程中动态生成更多
+Verilog 代码的预处理过程。在上面的例子中，generate
+块在综合的过程中，综合了 8 句 assign 赋值语句。</p>
+<p>总的来说，for
+循环强调了对电路的行为描述，在综合的过程中循环展开，而生成块则用于综合过程中，动态生成代码，两者有本质上的不同。</p>
+<h2 id="problem-17-replication-operator">Problem 17 : Replication
+operator</h2>
+<p>连接操作符允许我们将短小的向量连接在一起构成更宽的向量。很方便，但有的时候需要将多个重复的向量连接在一起，诸如
+assign a = {b,b,b,b,b,b};
+这样的操作仍然很繁琐。而重复操作符语法就可以在这种情况下允许你将一个向量重复多次，并将它们连接在一起，语法是这样：{num{vector}}
+，也就是{ 重复次数 { 向量 } }</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token operator">&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span><span class="token number">1'b1</span><span class="token operator">&#125;&#125;</span>           <span class="token comment">// 5'b11111 (or 5'd31 or 5'h1f)</span>
+<span class="token operator">&#123;</span><span class="token number">2</span><span class="token operator">&#123;</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token operator">&#125;&#125;</span>          <span class="token comment">// The same as &#123;a,b,c,a,b,c&#125;</span>
+<span class="token operator">&#123;</span><span class="token number">3'd5</span><span class="token punctuation">,</span> <span class="token operator">&#123;</span><span class="token number">2</span><span class="token operator">&#123;</span><span class="token number">3'd6</span><span class="token operator">&#125;&#125;&#125;</span>   <span class="token comment">// 9'b101_110_110. It's a concatenation of 101 with</span>
+                    <span class="token comment">// the second vector, which is two copies of 3'b110.</span></code></pre></div></figure>
+<p>One common place to see a replication operator is when sign-extending
+a smaller number to a larger one, while preserving its signed value.
+This is done by replicating the sign bit (the most significant bit) of
+the smaller number to the left. For example, sign-extending 4'b0101 (5)
+to 8 bits results in 8'b00000101 (5), while sign-extending 4'b1101 (-3)
+to 8 bits results in 8'b11111101 (-3).</p>
+<p>Build a circuit that sign-extends an 8-bit number to 32 bits. This
+requires a concatenation of 24 copies of the sign bit (i.e., replicate
+bit[7] 24 times) followed by the 8-bit number itself.</p>
+<p>重复操作符的一个常见用法是将较小的数字符号扩展到较大的数字，同时保留其符号值。这是通过复制较小数字的符号位（最高有效位）来实现的。例如，将
+4'b0101（5）符号扩展到 8 位，结果为 8'b00000101（5），而将
+4'b1101（-3）符号扩展到 8 位，结果为 8'b11111101（-3）。</p>
+<p>构建一个电路，将 8 位数字符号扩展到 32 位。这需要将符号位（即，复制
+bit[7] 24 次）连接在一起，然后是 8 位数字本身。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> in<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">assign</span> out <span class="token operator">=</span> <span class="token operator">&#123;</span> <span class="token operator">&#123;</span><span class="token number">24</span><span class="token operator">&#123;</span>in<span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span><span class="token operator">&#125;&#125;</span><span class="token punctuation">,</span> in <span class="token operator">&#125;</span><span class="token punctuation">;</span> <span class="token comment">// 24 copies of in[7] followed by in itself.</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-18-more-replication">Problem 18 : More Replication</h2>
+<p>Given five 1-bit signals (a, b, c, d, and e), compute all 25 pairwise
+one-bit comparisons in the 25-bit output vector. The output should be 1
+if the two bits being compared are equal.</p>
+<p>给定 5 个 1 bit 信号（a、b、c、d 和 e），将 5 个 1bit
+信号分别组成下图中两个 25 bit 信号，输出向量为这两个 25 bit
+向量的逐位操作的结果。如果被比较的两个比特相等，则输出为 1。</p>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog">out<span class="token punctuation">[</span><span class="token number">24</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">~</span>a <span class="token operator">^</span> a<span class="token punctuation">;</span>   <span class="token comment">// a == a, so out[24] is always 1.</span>
+out<span class="token punctuation">[</span><span class="token number">23</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">~</span>a <span class="token operator">^</span> b<span class="token punctuation">;</span>
+out<span class="token punctuation">[</span><span class="token number">22</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">~</span>a <span class="token operator">^</span> c<span class="token punctuation">;</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+out<span class="token punctuation">[</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">~</span>e <span class="token operator">^</span> d<span class="token punctuation">;</span>
+out<span class="token punctuation">[</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">~</span>e <span class="token operator">^</span> e<span class="token punctuation">;</span></code></pre></div></figure>
+<figure>
+<img src="/img/HDLBits_four/Vector5.png" srcset="/img/loading.gif" lazyload alt="More Replication" />
+<figcaption aria-hidden="true">More Replication</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> <span class="token function">top_module</span><span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">24</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> out
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// The output is XNOR of two vectors created by </span>
+    <span class="token comment">// concatenating and replicating the five inputs.</span>
+    <span class="token comment">// assign out = ~&#123; ... &#125; ^ &#123; ... &#125;;</span>
+    <span class="token keyword">assign</span> out <span class="token operator">=</span> <span class="token operator">~&#123;&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span>a<span class="token operator">&#125;&#125;</span><span class="token punctuation">,</span><span class="token operator">&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span>b<span class="token operator">&#125;&#125;</span><span class="token punctuation">,</span><span class="token operator">&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span>c<span class="token operator">&#125;&#125;</span><span class="token punctuation">,</span><span class="token operator">&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span>d<span class="token operator">&#125;&#125;</span><span class="token punctuation">,</span><span class="token operator">&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span>e<span class="token operator">&#125;&#125;&#125;</span> <span class="token operator">^</span> <span class="token operator">&#123;&#123;</span><span class="token number">5</span><span class="token operator">&#123;</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token punctuation">,</span>d<span class="token punctuation">,</span>e<span class="token operator">&#125;&#125;&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/HDLBits%E5%88%B7%E9%A2%98/" class="category-chain-item">HDLBits刷题</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
+      
+        <a href="/tags/HDLBits/" class="print-no-link">#HDLBits</a>
+      
+        <a href="/tags/%E5%88%B7%E9%A2%98/" class="print-no-link">#刷题</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HDLBits刷题日记（四）</div>
+      <div>https://yao-jiangyu.github.io/HDLBits_four/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>小姚</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/sync_fifo/" title="同步FIFO详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">同步FIFO详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/HDLBits_three/" title="HDLBits刷题日记（三）">
+                        <span class="hidden-mobile">HDLBits刷题日记（三）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://myblogcomment-alpha.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎加入讨论，让我们的评论区热闹起来！使用魔法更加稳定哦！🎈 ~"}},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      京ICP证123456号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
