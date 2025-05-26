@@ -32,8 +32,9 @@
 <meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_shift.png">
 <meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_shift8.png">
 <meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_add.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_fadd.png">
 <meta property="article:published_time" content="2025-05-26T12:34:00.000Z">
-<meta property="article:modified_time" content="2025-05-26T14:34:35.918Z">
+<meta property="article:modified_time" content="2025-05-26T14:59:09.366Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="FPGA">
 <meta property="article:tag" content="HDLBits">
@@ -257,7 +258,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1.2k 字
         
       </span>
     
@@ -268,7 +269,7 @@
         
         
         
-          9 分钟
+          10 分钟
         
       </span>
     
@@ -462,6 +463,36 @@ out2)。<strong>注意，端口连接的顺序与模块的端口声明顺序相�
 
     add16 <span class="token function">adder1</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> sum<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第一个 8 位加法器</span>
     add16 <span class="token function">adder2</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c1<span class="token punctuation">,</span> sum<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> cout<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第二个 8 位加法器</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-25-module-fadd">Problem 25 : Module fadd</h2>
+<p><code>module add16 ( input[15:0] a, input[15:0] b, input cin, output[15:0] sum, output cout );</code></p>
+<p><code>module add1 ( input a, input b, input cin, output sum, output cout );</code></p>
+<figure>
+<img src="/img/HDLBits_five/Module_fadd.png" srcset="/img/loading.gif" lazyload alt="Module_fadd" />
+<figcaption aria-hidden="true">Module_fadd</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> b<span class="token punctuation">,</span>  
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> sum
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">wire</span> c1<span class="token punctuation">,</span>cout<span class="token punctuation">;</span> <span class="token comment">//定义中间进位信号</span>
+
+    add16 <span class="token function">adder1</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> sum<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第一个 8 位加法器</span>
+    add16 <span class="token function">adder2</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c1<span class="token punctuation">,</span> sum<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> cout<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第二个 8 位加法器</span>
+
+<span class="token keyword">endmodule</span>
+
+<span class="token keyword">module</span> add1 <span class="token punctuation">(</span> <span class="token keyword">input</span> a<span class="token punctuation">,</span> <span class="token keyword">input</span> b<span class="token punctuation">,</span> <span class="token keyword">input</span> cin<span class="token punctuation">,</span>   <span class="token keyword">output</span> sum<span class="token punctuation">,</span> <span class="token keyword">output</span> cout <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Full adder module here</span>
+<span class="token keyword">assign</span> <span class="token operator">&#123;</span>cout<span class="token punctuation">,</span>sum<span class="token operator">&#125;</span> <span class="token operator">=</span> a<span class="token operator">+</span>b<span class="token operator">+</span>cin<span class="token punctuation">;</span>
+
+<span class="token comment">//全加器逻辑</span>
+<span class="token comment">//assign sum = a ^ b ^ cin;</span>
+<span class="token comment">//assign cout = a&amp;b | a&amp;cin | b&amp;cin;</span>
 
 <span class="token keyword">endmodule</span></code></pre></div></figure>
 
