@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.jpg">
+  <link rel="icon" href="/img/avatar.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="小姚">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Verilog Language - Modules:Hierarchy Problem 19 : Module 模块，它是一个通过输入和输出端口与外部进行交互的电路。更大、更复杂的电路是通过将较小的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDLBits刷题日记（五）">
+<meta property="og:url" content="https://yao-jiangyu.github.io/HDLBits_five/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。            1、Verilog Language - Modules:Hierarchy Problem 19 : Module 模块，它是一个通过输入和输出端口与外部进行交互的电路。更大、更复杂的电路是通过将较小的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_pos.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_name.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_shift.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_shift8.png">
+<meta property="og:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module_add.png">
+<meta property="article:published_time" content="2025-05-26T12:34:00.000Z">
+<meta property="article:modified_time" content="2025-05-26T14:34:35.918Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FPGA">
+<meta property="article:tag" content="HDLBits">
+<meta property="article:tag" content="刷题">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yao-jiangyu.github.io/img/HDLBits_five/Module.png">
+  
+  
+  
+  <title>HDLBits刷题日记（五） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yao-jiangyu.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":1},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"jMO2SnEaE8xWJhRaZT0vd3UP-MdYXbMMI","app_key":"SNQjh7z4sNwgP0MEGn5mGmx6","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaojiangyu&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/myfirst.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HDLBits刷题日记（五）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-26 20:34" pubdate>
+          2025年5月26日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HDLBits刷题日记（五）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <div class="note note-primary">
+            <p>打算利用碎片化时间重温一遍Verilog语法，好记忆不如烂笔头，在此记录一下HDLBits刷题的过程，记录一些知识点，方便日后再次复习。</p>
+          </div>
+<h1 id="verilog-language---moduleshierarchy">1、Verilog Language -
+Modules:Hierarchy</h1>
+<h2 id="problem-19-module">Problem 19 : Module</h2>
+<p>模块，它是一个通过输入和输出端口与外部进行交互的电路。更大、更复杂的电路是通过将较小的模块组合成较大的模块，以及将其他部分
+(如 assign 语句和 always 块)
+连接在一起来构建的。这形成了一个层次结构，因为模块可以包含其他模块的实例。模块的层次结构是通过在另一个模块中实例化一个模块来创建的，只要所有使用的模块都属于同一个项目
+(这样编译器就知道在哪里找到该模块)。通常一个文件只包含一个模块。</p>
+<p>在实例化模块时，有两种常用的方式来进行模块端口的信号连接：按端口顺序以及按端口名称连接端口。</p>
+<p><strong>按端口顺序，</strong> mod_a instance1 ( wa, wb, wc ); wa, wb,
+wc 分别连接到模块的
+第一个端口（in1），第二个端口（in2）以及第三个端口（out）。这里所谓的端口顺序指的是模块端口的定义顺序。这种方式的弊端在于，一旦端口列表发生改变，所有模块实例化中的端口连接都需要改变。</p>
+<p><strong>按端口名称，</strong> mod_a instance2 ( .out(wc), .in1(wa),
+.in2(wb) );
+在这种方式中根据端口名称指定外部信号的连接。这样一来就和端口声明的顺序完全没有关系。一旦模块出现改动，只要修改相应的部分即可。实际上，一般都使用这种方式来进行模块实例化。</p>
+<p>下图显示了一个非常简单的电路，其中包含一个子模块。在这个练习中，创建一个模块
+mod_a 的实例，然后将模块的三个引脚 (in1、in2 和 out)
+连接到顶级模块的三个端口 (线路 a、b 和 out)。</p>
+<figure>
+<img src="/img/HDLBits_five/Module.png" srcset="/img/loading.gif" lazyload alt="Module" />
+<figcaption aria-hidden="true">Module</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> <span class="token keyword">input</span> a<span class="token punctuation">,</span> <span class="token keyword">input</span> b<span class="token punctuation">,</span> <span class="token keyword">output</span> out <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mod_a U_mod_a <span class="token punctuation">(</span>
+        <span class="token punctuation">.</span><span class="token function">in1</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">.</span><span class="token function">in2</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">.</span><span class="token function">out</span><span class="token punctuation">(</span>out<span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//mod_a U_mod_a(a, b, out); //使用按照端口顺序的方式 声明信号连接</span>
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-20-module-pos">Problem 20 : Module pos</h2>
+<p><code>module mod_a ( output, output, input, input, input, input );</code></p>
+<p>模块 mod_a
+有四个输入端口和两个输出端口。它的端口声明顺序是：out1、out2、in1、in2、in3、in4。现在在顶级模块中实例化
+mod_a 模块，并将其端口连接到顶级模块的四个输入端口 (a、b、c 和 d)
+和两个输出端口 (out1 和
+out2)。<strong>注意，端口连接的顺序与模块的端口声明顺序相同。</strong></p>
+<figure>
+<img src="/img/HDLBits_five/Module_pos.png" srcset="/img/loading.gif" lazyload alt="Module_pos" />
+<figcaption aria-hidden="true">Module_pos</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> a<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> b<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> c<span class="token punctuation">,</span>
+    <span class="token keyword">input</span> d<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out1<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    mod_a <span class="token function">name</span><span class="token punctuation">(</span>out1<span class="token punctuation">,</span>out2<span class="token punctuation">,</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token punctuation">,</span>d<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-21-module-name">Problem 21 : Module name</h2>
+<p><code>module mod_a ( output out1, output out2, input in1, input in2, input in3, input in4);</code></p>
+<figure>
+<img src="/img/HDLBits_five/Module_name.png" srcset="/img/loading.gif" lazyload alt="Module_name" />
+<figcaption aria-hidden="true">Module_name</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> a<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> b<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> c<span class="token punctuation">,</span>
+    <span class="token keyword">input</span> d<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out1<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> out2
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    mod_a <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token function">out1</span><span class="token punctuation">(</span>out1<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token function">out2</span><span class="token punctuation">(</span>out2<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token function">in1</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token function">in2</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token function">in3</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token function">in4</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-22-module-shift">Problem 22 : Module shift</h2>
+<p>给出了一个名为 my_dff 的模块，包含两个输入和一个输出(实现 D
+触发器的功能)。实例化三个 my_dff，然后将它们连接在一起，构成长度为 3
+的移位寄存器。注意：clk 端口需要连接到所有的寄存器实例上。</p>
+<p><code>module my_dff ( input clk, input d, output q );</code></p>
+<figure>
+<img src="/img/HDLBits_five/Module_shift.png" srcset="/img/loading.gif" lazyload alt="Module_shift" />
+<figcaption aria-hidden="true">Module_shift</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> clk<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> d<span class="token punctuation">,</span> 
+    <span class="token keyword">output</span> q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">wire</span> q1<span class="token punctuation">,</span> q2<span class="token punctuation">;</span> <span class="token comment">//定义中间信号</span>
+
+    my_dff <span class="token function">dff1</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> d<span class="token punctuation">,</span> q1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第一个 D 触发器</span>
+    my_dff <span class="token function">dff2</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> q1<span class="token punctuation">,</span> q2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第二个 D 触发器</span>
+    my_dff <span class="token function">dff3</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> q2<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第三个 D 触发器</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-23-module-shift8">Problem 23 : Module shift8</h2>
+<p><code>module my_dff8 ( input clk, input [7:0] d, output [7:0] q );</code></p>
+<figure>
+<img src="/img/HDLBits_five/Module_shift8.png" srcset="/img/loading.gif" lazyload alt="Module_shift8" />
+<figcaption aria-hidden="true">Module_shift8</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> clk<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> d<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> sel<span class="token punctuation">,</span>
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> q
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">wire</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> q1<span class="token punctuation">,</span> q2<span class="token punctuation">,</span>q3<span class="token punctuation">;</span> <span class="token comment">//定义中间信号</span>
+
+    my_dff8 <span class="token function">dff1</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> d<span class="token punctuation">,</span> q1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第一个 D 触发器</span>
+    my_dff8 <span class="token function">dff2</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> q1<span class="token punctuation">,</span> q2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第二个 D 触发器</span>
+    my_dff8 <span class="token function">dff3</span><span class="token punctuation">(</span>clk<span class="token punctuation">,</span> q2<span class="token punctuation">,</span> q3<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第二个 D 触发器</span>
+
+    <span class="token keyword">assign</span> q <span class="token operator">=</span> <span class="token punctuation">(</span>sel <span class="token operator">==</span> <span class="token number">2'b00</span><span class="token punctuation">)</span> <span class="token operator">?</span> d <span class="token punctuation">:</span> <span class="token comment">//当 sel 为 00 时，输出 d</span>
+               <span class="token punctuation">(</span>sel <span class="token operator">==</span> <span class="token number">2'b01</span><span class="token punctuation">)</span> <span class="token operator">?</span> q1 <span class="token punctuation">:</span> <span class="token comment">//当 sel 为 01 时，输出 q1</span>
+               <span class="token punctuation">(</span>sel <span class="token operator">==</span> <span class="token number">2'b10</span><span class="token punctuation">)</span> <span class="token operator">?</span> q2 <span class="token punctuation">:</span> <span class="token comment">//当 sel 为 10 时，输出 q2</span>
+               q3<span class="token punctuation">;</span> <span class="token comment">//当 sel 为 11 时，输出 q3</span>
+    
+    <span class="token comment">// always @(*)  // 组合逻辑always块</span>
+    <span class="token comment">// case(sel)</span>
+    <span class="token comment">//   2'h0: q = d;</span>
+    <span class="token comment">//   2'h1: q = q1;</span>
+    <span class="token comment">//   2'h2: q = q2;</span>
+    <span class="token comment">//   2'h3: q = q3;</span>
+    <span class="token comment">// endcase</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+<h2 id="problem-24-module-add">Problem 24 : Module add</h2>
+<p><code>module add16 ( input[15:0] a, input[15:0] b, input cin, output[15:0] sum, output cout );</code></p>
+<figure>
+<img src="/img/HDLBits_five/Module_add.png" srcset="/img/loading.gif" lazyload alt="Module_add" />
+<figcaption aria-hidden="true">Module_add</figcaption>
+</figure>
+<figure><div class="code-wrapper"><pre class="language-verilog" data-language="verilog"><code class="language-verilog"><span class="token keyword">module</span> top_module <span class="token punctuation">(</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> a<span class="token punctuation">,</span> 
+    <span class="token keyword">input</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> b<span class="token punctuation">,</span>  
+    <span class="token keyword">output</span> <span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span> sum
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">wire</span> c1<span class="token punctuation">,</span>cout<span class="token punctuation">;</span> <span class="token comment">//定义中间进位信号</span>
+
+    add16 <span class="token function">adder1</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> sum<span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">:</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第一个 8 位加法器</span>
+    add16 <span class="token function">adder2</span><span class="token punctuation">(</span>a<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> c1<span class="token punctuation">,</span> sum<span class="token punctuation">[</span><span class="token number">31</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><span class="token punctuation">,</span> cout<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//实例化第二个 8 位加法器</span>
+
+<span class="token keyword">endmodule</span></code></pre></div></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/HDLBits%E5%88%B7%E9%A2%98/" class="category-chain-item">HDLBits刷题</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/FPGA/" class="print-no-link">#FPGA</a>
+      
+        <a href="/tags/HDLBits/" class="print-no-link">#HDLBits</a>
+      
+        <a href="/tags/%E5%88%B7%E9%A2%98/" class="print-no-link">#刷题</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HDLBits刷题日记（五）</div>
+      <div>https://yao-jiangyu.github.io/HDLBits_five/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>小姚</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E4%BD%8D%E6%93%8D%E4%BD%9C%E6%9B%BF%E4%BB%A3%E5%8F%96%E6%A8%A1%E8%BF%90%E7%AE%97/" title="位操作替代取模运算">
+                        <span class="hidden-mobile">位操作替代取模运算</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://myblogcomment-alpha.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎加入讨论，让我们的评论区热闹起来！使用魔法更加稳定哦！🎈 ~"}},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      京ICP证123456号
+    </a>
+  </span>
+  
+    
+      <span>
+        <a
+          href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=12345678"
+          rel="nofollow noopener"
+          class="beian-police"
+          target="_blank"
+        >
+          
+            <span style="visibility: hidden; width: 0">|</span>
+            <img src="/img/police_beian.png" srcset="/img/loading.gif" lazyload alt="police-icon"/>
+          
+          <span>京公网安备12345678号</span>
+        </a>
+      </span>
+    
+  
+</div>
+
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
